@@ -3,7 +3,7 @@
 
 	/** @type {import('./$types').PageData} */
 	export let data;
-	console.log(data);
+	let { question, id } = data;
 </script>
 
 <svelte:head>
@@ -11,9 +11,25 @@
 </svelte:head>
 
 <section>
-	<h1>
-	Answer
-	</h1>
+
+	<form action="?/submitAnswer" method="POST">
+		<input type="hidden" name="id" value={id} />
+
+		<h1>
+		Question
+		</h1>
+		<div>{question}</div>
+
+		<h1>
+		Answer
+		</h1>
+		<textarea id="answer" name="answer" />
+
+		<div>
+			<button formaction="?/submitAnswer">Submit</button>
+		</div>
+
+	</form>
 </section>
 
 <style>
