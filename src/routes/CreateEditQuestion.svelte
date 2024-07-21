@@ -31,7 +31,9 @@
 		<button formaction="?/saveQuestionAnswerPair">Submit</button>
 	</form>
 
-	{link ? link : ''}
+	{#if link}
+		<a href={link}>{link}</a>
+	{/if}
 
 	<div>
 		{$displayed_question ? 'Question: ' + $displayed_question : ''}

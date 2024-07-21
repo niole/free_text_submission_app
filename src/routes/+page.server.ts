@@ -20,7 +20,7 @@ export const actions = {
                     ownerId: 'me',
                     question,
                     answer,
-                    link: `https://example.com/answer/${id}`,
+                    link: `http://localhost:5173/question_input/${id}`,
                 });
             }
         }

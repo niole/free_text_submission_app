@@ -22,6 +22,8 @@ const QuestionAnswerPairDbModel = sequelize.define('QuestionAnswerPair', {
 });
 QuestionAnswerPairDbModel.belongsTo(UserDbModel, { targetKey: 'id', foreignKey: 'ownerId' });
 
+await sequelize.sync();
+
 const found = await UserDbModel.findOne({ id: 'me'});
 if (!found) {
     await UserDbModel.create({ id: 'me', email: 'niolenelson@gmail.com' });
