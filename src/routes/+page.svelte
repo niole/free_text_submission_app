@@ -1,4 +1,6 @@
 <script lang="ts">
+	// TODO gate with google auth, only allow teacher
+	// add teacher registration page or build with configuration for mom only dnelson@mvrhs.org
 	import CreateEditQuestion from './CreateEditQuestion.svelte';
 	import { writable } from 'svelte/store';
 

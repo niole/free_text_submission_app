@@ -22,6 +22,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"openai": "^4.52.7",
 		"sequelize": "^6.37.3",
 		"sqlite3": "^5.1.7"
 	}

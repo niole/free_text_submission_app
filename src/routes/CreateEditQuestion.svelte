@@ -3,8 +3,8 @@
 
 
 	export let pairId: any | null = null;
-	export let question: any | null = null;
-	export let answer: any | null = null;
+	export let question: string = '';
+	export let answer: string = '';
 	export let link: any | null = null;
 
 	const displayed_question = writable();
@@ -20,12 +20,12 @@
 
 		<label>
 			question
-			<input id="question" name="question" value={$displayed_question} on:keyup={event => question = event.target.value}/>
+			<textarea id="question" name="question" value={$displayed_question} on:keyup={event => question = event.target.value}/>
 		</label>
 
 		<label>
 			answer
-			<input id="answer" name="answer"   value={$displayed_answer} on:keyup={event => answer = event.target.value} />
+			<textarea id="answer" name="answer"   value={$displayed_answer} on:keyup={event => answer = event.target.value} />
 		</label>
 
 		<button formaction="?/saveQuestionAnswerPair">Submit</button>

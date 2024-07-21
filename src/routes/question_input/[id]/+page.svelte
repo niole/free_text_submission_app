@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { writable } from 'svelte/store';
-
+	// TODO gate with google auth
 	/** @type {import('./$types').PageData} */
 	export let data;
 	let { question, id } = data;
