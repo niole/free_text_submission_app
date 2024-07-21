@@ -1,43 +1,36 @@
 import { type RequestEvent } from '@sveltejs/kit';
-
-let qs: { id: string, question: string, answer: string, link?: string }[] = [];
+import {createQuestionAnswerPair,  updateQuestionAnswerPair, listQuestionAnswerPairs } from '$lib/domain/models/questionAnswerPair';
 
 /** @type {import('./$types').Actions} */
 export const actions = {
     saveQuestionAnswerPair: async (event: RequestEvent) => {
         const body = await event.request.formData();
-        const question = body.get('question');
-        const answer = body.get('answer');
-        const pairId = body.get('pairId');
+        const question = body.get('question')?.toString();
+        const answer = body.get('answer')?.toString();
+        const pairId = body.get('pairId')?.toString();
 
         if (question && answer) {
 
             if (pairId) {
-                for (let i = 0; i < qs.length; i++) {
-                    if (qs[i].id === pairId) {
-                        qs[i].question = question.toString();
-                        qs[i].answer = answer.toString();
-                        break;
-                    }
-                }
+                await updateQuestionAnswerPair(pairId, { question, answer });
             } else {
                 const id = `${Math.random().toString()}-${Date.now()}`;
-                qs.push({
-                    id: id,
-                    question: question.toString(),
-                    answer: answer.toString(),
+                await createQuestionAnswerPair({
+                    id,
+                    ownerId: 'me',
+                    question,
+                    answer,
                     link: `https://example.com/answer/${id}`,
                 });
             }
         }
 
-        console.log(qs);
-        return { qs };
+        return { qs: await listQuestionAnswerPairs('me')};
     },
 
 };
 
 /** @type {import('./$types').PageLoad} */
-export function load() {
-    return { qs };
+export async function load() {
+    return { qs: await listQuestionAnswerPairs('me')};
 }

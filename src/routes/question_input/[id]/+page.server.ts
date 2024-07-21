@@ -1,8 +1,6 @@
 import { type RequestEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
-
-// TODO get qs
-let qs: { id: string, question: string, answer: string, link?: string }[] = [];
+import { findQuestionAnswerPair } from '$lib/domain/models/questionAnswerPair';
 
 /** @type {import('./$types').Actions} */
 export const actions = {
@@ -20,7 +18,7 @@ export const actions = {
         }
 
         if (id && answer) {
-            const pair = qs.find(q => q.id === id);
+            const pair = await findQuestionAnswerPair(id.toString());
             if (pair) {
                 if (answer.toString() === pair.answer) {
                     return;
@@ -37,9 +35,10 @@ export const actions = {
 };
 
 /** @type {import('./$types').PageLoad} */
-export function load({ params }) {
+export async function load({ params }) {
     const { id } = params;
-    const pair = qs.find(q => q.id === id);
+    const pair = await findQuestionAnswerPair(id.toString());
+
 
     if (pair) {
         return {
@@ -48,9 +47,5 @@ export function load({ params }) {
         };
     }
 
-    return {
-        question: 'what is the answer to life, the universe, and everything?',
-        id: "sdf",
-    };
-	//error(404, 'Not found');
+	error(404, 'Not found');
 }
