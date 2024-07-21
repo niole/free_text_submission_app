@@ -26,7 +26,7 @@ await sequelize.sync();
 
 const found = await UserDbModel.findOne({ id: 'me'});
 if (!found) {
-    await UserDbModel.create({ id: 'me', email: 'niolenelson@gmail.com' });
+    await UserDbModel.create({ id: 'me', email: import.meta.env.VITE_TEACHER_EMAIL });
 }
 
 export { UserDbModel, QuestionAnswerPairDbModel };

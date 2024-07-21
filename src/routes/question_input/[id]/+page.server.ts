@@ -42,7 +42,7 @@ export const actions = {
         }
 
         if (id && answer) {
-            const pair = await findQuestionAnswerPair(id.toString());
+            const pair = await findQuestionAnswerPair(id);
             if (pair) {
                 const completion = await openai.chat.completions.create({
                     messages: [{"role": "system", "content": createChatPrompt(pair)},
@@ -53,6 +53,7 @@ export const actions = {
                 const passed = getAssistentGrade(completion)
                 if (passed !== null && passed) {
                     // TODO have a good response
+                    // TODO metrics
                     return;
                 } else {
                     if (passed === null) {

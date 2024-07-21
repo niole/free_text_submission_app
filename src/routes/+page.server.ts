@@ -1,6 +1,8 @@
 import { type RequestEvent } from '@sveltejs/kit';
 import {createQuestionAnswerPair,  updateQuestionAnswerPair, listQuestionAnswerPairs } from '$lib/domain/models/questionAnswerPair';
 
+const APP_DOMAIN = import.meta.env.VITE_APP_DOMAIN;
+
 /** @type {import('./$types').Actions} */
 export const actions = {
     saveQuestionAnswerPair: async (event: RequestEvent) => {
@@ -20,7 +22,7 @@ export const actions = {
                     ownerId: 'me',
                     question,
                     answer,
-                    link: `http://localhost:5173/question_input/${id}`,
+                    link: `${APP_DOMAIN}/question_input/${id}`,
                 });
             }
         }
