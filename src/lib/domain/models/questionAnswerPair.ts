@@ -1,7 +1,8 @@
+import { v4 } from 'uuid';
 import { QuestionAnswerPairDbModel } from './db';
 
 export type QuestionAnswerPairModel = {
-    id: string,
+    id?: string,
     ownerId: string,
     question: string,
     answer: string,
@@ -9,7 +10,7 @@ export type QuestionAnswerPairModel = {
 };
 
 export function createQuestionAnswerPair(pair: QuestionAnswerPairModel) {
-    return QuestionAnswerPairDbModel.create(pair);
+    return QuestionAnswerPairDbModel.create({...pair, id: v4() });
 }
 
 export async function updateQuestionAnswerPair(id: string, updates: Partial<QuestionAnswerPairModel>) {

@@ -1,8 +1,14 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+
 	// TODO gate with google auth
 	/** @type {import('./$types').PageData} */
 	export let data;
 	let { question, id } = data;
+	const viewingUser = 'niolenelson@gmail.com';
+	onMount(() => {
+		document.cookie = JSON.stringify({viewingUser: viewingUser});
+	});
 </script>
 
 <svelte:head>
@@ -13,6 +19,7 @@
 
 	<form action="?/submitAnswer" method="POST">
 		<input type="hidden" name="id" value={id} />
+		<input type="hidden" name="email" value={viewingUser} />
 
 		<h1>
 		Question

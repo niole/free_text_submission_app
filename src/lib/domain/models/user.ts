@@ -1,6 +1,6 @@
 import * as _ from './db';
 
 export type UserModel = {
-    id: string,
+    id?: string,
     email: string,
 };

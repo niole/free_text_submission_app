@@ -2,6 +2,8 @@ import OpenAI from "openai";
 import { type RequestEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import { type QuestionAnswerPairModel, findQuestionAnswerPair } from '$lib/domain/models/questionAnswerPair';
+import { createAnswerQuestionMetric, createMetric, createViewQuestionMetric } from '$lib/domain/models/metric';
+import { createAnswer } from '$lib/domain/models/answer';
 
 const openai = new OpenAI({ apiKey: import.meta.env.VITE_OPENAI_KEY });
 
@@ -32,6 +34,11 @@ export const actions = {
         const body = await event.request.formData();
         const answer = body.get('answer')?.toString();
         const id = body.get('id')?.toString();
+        const email: string | undefined = body.get('email')?.toString();
+
+        if (!email) {
+            error(400, 'Missing email');
+        }
 
         if (!id) {
             error(400, 'Missing id');
@@ -51,9 +58,20 @@ export const actions = {
                     model: "gpt-4o-mini",
                 });
                 const passed = getAssistentGrade(completion)
+
+                const correct = passed !== null && passed;
+                const submission = {
+                    createdAt: new Date(),
+                    pairId: pair.id,
+                    email,
+                    answer,
+                    correct,
+                };
+                createAnswer(submission);
+                createMetric(createAnswerQuestionMetric(email, pair.id));
+
                 if (passed !== null && passed) {
                     // TODO have a good response
-                    // TODO metrics
                     return;
                 } else {
                     if (passed === null) {
@@ -71,9 +89,15 @@ export const actions = {
 };
 
 /** @type {import('./$types').PageLoad} */
-export async function load({ params }) {
-    const { id } = params;
-    const pair = await findQuestionAnswerPair(id.toString());
+export async function load(event) {
+    const { params } = event;
+    const { viewingUser } = JSON.parse(event.request.headers.get('cookie') ?? '{}');
+    const id = params.id?.toString();
+    const pair = await findQuestionAnswerPair(id);
+
+    // TODO include viewing user info somehow...headers?
+    const viewPageMetric = createViewQuestionMetric(viewingUser, id);
+    createMetric(viewPageMetric);
 
     if (pair) {
         return {
