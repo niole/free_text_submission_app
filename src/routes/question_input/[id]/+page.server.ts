@@ -30,6 +30,23 @@ function getAssistentGrade(completion: any): boolean | null {
 
 /** @type {import('./$types').Actions} */
 export const actions = {
+    handlePageVisit: async (event: RequestEvent) => {
+        const body = await event.request.formData();
+        const viewingUser = body.get('viewingUser')?.toString();
+        const id = body.get('id')?.toString();
+
+        if (!id) {
+            error(400, 'Missing question id');
+        }
+
+        if (!viewingUser) {
+            error(400, 'Missing viewingUser information');
+        }
+
+        const viewPageMetric = createViewQuestionMetric(viewingUser, id);
+        createMetric(viewPageMetric);
+    },
+
     submitAnswer: async (event: RequestEvent) => {
         const body = await event.request.formData();
         const answer = body.get('answer')?.toString();
@@ -62,13 +79,13 @@ export const actions = {
                 const correct = passed !== null && passed;
                 const submission = {
                     createdAt: new Date(),
-                    pairId: pair.id,
+                    pairId: pair.id!,
                     email,
                     answer,
                     correct,
                 };
-                createAnswer(submission);
-                createMetric(createAnswerQuestionMetric(email, pair.id));
+                const userAnswer = await createAnswer(submission);
+                createMetric(createAnswerQuestionMetric(email, pair.id, userAnswer.id));
 
                 if (passed !== null && passed) {
                     // TODO have a good response
@@ -91,13 +108,9 @@ export const actions = {
 /** @type {import('./$types').PageLoad} */
 export async function load(event) {
     const { params } = event;
-    const { viewingUser } = JSON.parse(event.request.headers.get('cookie') ?? '{}');
+
     const id = params.id?.toString();
     const pair = await findQuestionAnswerPair(id);
-
-    // TODO include viewing user info somehow...headers?
-    const viewPageMetric = createViewQuestionMetric(viewingUser, id);
-    createMetric(viewPageMetric);
 
     if (pair) {
         return {

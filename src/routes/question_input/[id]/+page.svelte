@@ -6,8 +6,15 @@
 	export let data;
 	let { question, id } = data;
 	const viewingUser = 'niolenelson@gmail.com';
+
 	onMount(() => {
-		document.cookie = JSON.stringify({viewingUser: viewingUser});
+		fetch('?/handlePageVisit', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: `id=${id}&viewingUser=${viewingUser}`,
+		});
 	});
 </script>
 

@@ -10,6 +10,6 @@ export type Answer = {
     correct: boolean,
 };
 
-export async function createAnswer(answer: Answer) {
-    return await AnswerDbModel.create({...answer, id: v4() });
+export async function createAnswer(answer: Answer): Promise<Answer> {
+    return AnswerDbModel.create({...answer, id: v4() }).then(x => x.toJSON());
 }

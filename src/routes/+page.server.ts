@@ -1,3 +1,4 @@
+import { v4 } from 'uuid';
 import { type RequestEvent } from '@sveltejs/kit';
 import {createQuestionAnswerPair,  updateQuestionAnswerPair, listQuestionAnswerPairs } from '$lib/domain/models/questionAnswerPair';
 
@@ -16,7 +17,7 @@ export const actions = {
             if (pairId) {
                 await updateQuestionAnswerPair(pairId, { question, answer });
             } else {
-                const id = `${Math.random().toString()}-${Date.now()}`;
+                const id = v4();
                 await createQuestionAnswerPair({
                     id,
                     ownerId: 'me',

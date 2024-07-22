@@ -10,7 +10,7 @@ export type QuestionAnswerPairModel = {
 };
 
 export function createQuestionAnswerPair(pair: QuestionAnswerPairModel) {
-    return QuestionAnswerPairDbModel.create({...pair, id: v4() });
+    return QuestionAnswerPairDbModel.create({...pair, id: pair.id ?? v4() });
 }
 
 export async function updateQuestionAnswerPair(id: string, updates: Partial<QuestionAnswerPairModel>) {

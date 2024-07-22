@@ -56,13 +56,28 @@
 		link={$displayed_link}
 	/>
 
-	{#each data.qs as q}
-		<div>
-			{q.question}
-			{q.answer}
-			<button on:click={() => setQuestionAnswerPair(q)}>{$pair_id === q.id ? 'close' : 'open' }</button>
-		</div>
-	{/each}
+	<a href="/view_metrics" target="_blank">View Metrics</a>
+
+	<table>
+		<thead>
+			<tr>
+				<th>question</th>
+				<th>answer</th>
+				<th>edit</th>
+			</tr>
+		</thead>
+		<tbody>
+			{#each data.qs as q}
+				<tr>
+					<td>{q.question}</td>
+					<td>{q.answer}</td>
+					<td>
+						<button on:click={() => setQuestionAnswerPair(q)}>{$pair_id === q.id ? 'close' : 'open' }</button>
+					</td>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
 
 </section>
 

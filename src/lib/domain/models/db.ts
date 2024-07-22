@@ -3,9 +3,6 @@ import { Sequelize, DataTypes } from 'sequelize';
 export const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: 'db.sqlite',
-    define: {
-        freezeTableName: true,
-    }
 });
 
 const UserDbModel = sequelize.define('User', {
@@ -22,14 +19,7 @@ const QuestionAnswerPairDbModel = sequelize.define('QuestionAnswerPair', {
 });
 QuestionAnswerPairDbModel.belongsTo(UserDbModel, { targetKey: 'id', foreignKey: 'ownerId' });
 
-export const MetricDbModel = sequelize.define('Metric', {
-    createdAt: DataTypes.DATE,
-    name: DataTypes.STRING,
-    subjectLabel: { type: DataTypes.STRING, allowNull: true },
-    targetLabel: { type: DataTypes.STRING, allowNull: true },
-});
-
-export const AnswerDbModel = sequelize.define('Answer', {
+const AnswerDbModel = sequelize.define('Answer', {
     createdAt: DataTypes.DATE,
     id: { type: DataTypes.STRING, unique: true, primaryKey: true },
     pairId: DataTypes.STRING,
@@ -39,12 +29,24 @@ export const AnswerDbModel = sequelize.define('Answer', {
 });
 AnswerDbModel.belongsTo(QuestionAnswerPairDbModel, { targetKey: 'id', foreignKey: 'pairId' });
 
+const MetricDbModel = sequelize.define('Metric', {
+    createdAt: DataTypes.DATE,
+    name: DataTypes.STRING,
+    userId: { type: DataTypes.STRING, allowNull: true },
+    answerId: { type: DataTypes.STRING, allowNull: true },
+    pairId: { type: DataTypes.STRING, allowNull: true },
+    email: { type: DataTypes.STRING, allowNull: true },
+});
+MetricDbModel.belongsTo(UserDbModel, { targetKey: 'id', foreignKey: { allowNull: true, name: 'userId' } });
+MetricDbModel.belongsTo(AnswerDbModel, { targetKey: 'id', foreignKey: { allowNull: true, name: 'answerId' } });
+MetricDbModel.belongsTo(QuestionAnswerPairDbModel, { targetKey: 'id', foreignKey: { allowNull: true, name: 'pairId' } });
+
 await sequelize.sync();
 
 // put teacher in DB
-const found = await UserDbModel.findOne({ id: 'me'});
+const found = await UserDbModel.findOne({ where: { id: 'me'} });
 if (!found) {
     await UserDbModel.create({ id: 'me', email: import.meta.env.VITE_TEACHER_EMAIL });
 }
 
-export { UserDbModel, QuestionAnswerPairDbModel };
+export { UserDbModel, QuestionAnswerPairDbModel, MetricDbModel, AnswerDbModel };
