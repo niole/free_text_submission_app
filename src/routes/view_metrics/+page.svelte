@@ -31,10 +31,11 @@
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Total Time Minutes</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            {#each data.metrics as { question, answer, email, correct, totalVisits, totalTimeSpentMs, start, end }}
+            {#each data.metrics as { pairId, question, answer, email, correct, totalVisits, totalTimeSpentMs, start, end }}
                 <tr>
                     <td>{email}</td>
                     <td>{question}</td>
@@ -44,6 +45,7 @@
                     <td>{getHumanReadableDate(start)}</td>
                     <td>{getHumanReadableDate(end)}</td>
                     <td>{getDurationMs(totalTimeSpentMs)}</td>
+                    <td><a href={`/view_metrics/question/${pairId}/email/${email}`}>view all</a></td>
                 </tr>
             {/each}
         </tbody>
