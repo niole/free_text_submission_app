@@ -93,8 +93,6 @@ export async function getAnalysis(): Promise<QuestionAnswerAnalysis[]> {
             UserDbModel,
         ],
     });
-    console.log(answers.map(x => x.toJSON()));
-    console.log(startTimes.map(x => x.toJSON()));
 
     // returns question answer pairs with a user's metrics, when they answered correctly, how long they spent, when they started
     // { question, userAnswer, pairId, email, correct, totalVisits, totalTimeSpentMinutes, start, end }

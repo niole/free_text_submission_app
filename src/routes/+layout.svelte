@@ -1,21 +1,34 @@
 <script>
-	import Header from './Header.svelte';
 	import '../app.css';
 </script>
 
 <div class="app">
-	<Header />
-
+	<nav>
+		<ol>
+			<li><a href="/">View</a></li>
+			<li><a href="/create">Create</a></li>
+			<li><a data-sveltekit-preload-data="false" href="/view_metrics">Metrics</a></li>
+		</ol>
+	</nav>
 	<main>
 		<slot />
 	</main>
-
-	<footer>
-	Make question answer pairs
-	</footer>
 </div>
 
 <style>
+
+	nav {
+		border-bottom: 1px solid black;
+	}
+
+	nav ol {
+		display: flex;
+	}
+	nav li {
+		list-style-type: none;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
 	.app {
 		display: flex;
 		flex-direction: column;
