@@ -47,8 +47,8 @@ type QuestionAnswerAnalysis = {
     email: string;
     correct: boolean;
     totalVisits: number;
-    totalTimeSpentMinutes: number;
-    start?: Date;
+    totalTimeSpentMs: number;
+    start: Date;
     end?: Date;
 };
 
@@ -93,9 +93,41 @@ export async function getAnalysis(): Promise<QuestionAnswerAnalysis[]> {
             UserDbModel,
         ],
     });
-    console.log(answers.length);
     console.log(answers.map(x => x.toJSON()));
     console.log(startTimes.map(x => x.toJSON()));
 
-    return [];
+    // returns question answer pairs with a user's metrics, when they answered correctly, how long they spent, when they started
+    // { question, userAnswer, pairId, email, correct, totalVisits, totalTimeSpentMinutes, start, end }
+    const groupedAnswers = {};
+    answers.forEach((x: any) => {
+        const key = `${x.pairId} $(x.email}`;
+        groupedAnswers[key] = (groupedAnswers[key] ?? []).concat(x);
+    });
+
+    startTimes.forEach((x: any) => {
+        const key = `${x.pairId} $(x.email}`;
+        groupedAnswers[key] = (groupedAnswers[key] ?? []).concat(x);
+    });
+
+    const results = Object.values(groupedAnswers).map((values: any[]) => {
+        // get earliest ViewQuestion is when started
+        const createdAsc = values.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+        const totalVisits = createdAsc.filter(x => x.name == 'ViewQuestion').length;
+        const userAnswers = createdAsc.filter(x => x.name === 'AnswerQuestion');
+        const correctAnswer = userAnswers.find(x => x?.Answer.correct);
+        const totalTimeSpentMs = createdAsc[createdAsc.length-1].createdAt.getTime() - createdAsc[0].createdAt.getTime();
+        return {
+            question: createdAsc[0].QuestionAnswerPair.question,
+            answer: correctAnswer?.Answer.answer,
+            pairId: createdAsc[0].pairId,
+            email: createdAsc[0].email,
+            correct: !!correctAnswer,
+            totalVisits: totalVisits,
+            totalTimeSpentMs,
+            start: createdAsc[0].createdAt,
+            end: createdAsc[createdAsc.length-1].createdAt,
+        };
+    });
+
+    return results;
 }
