@@ -5,8 +5,8 @@
 <div class="app">
 	<nav>
 		<ol>
-			<li><a href="/">View</a></li>
-			<li><a href="/create">Create</a></li>
+			<li><a data-sveltekit-preload-data="false" href="/">View</a></li>
+			<li><a data-sveltekit-preload-data="false" href="/create">Create</a></li>
 			<li><a data-sveltekit-preload-data="false" href="/view_metrics">Metrics</a></li>
 		</ol>
 	</nav>
@@ -23,11 +23,12 @@
 
 	nav ol {
 		display: flex;
+		margin: 0px;
+		padding: 0px;
 	}
 	nav li {
 		list-style-type: none;
-		padding-left: 15px;
-		padding-right: 15px;
+		padding: 15px 25px;
 	}
 	.app {
 		display: flex;

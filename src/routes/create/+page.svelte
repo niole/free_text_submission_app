@@ -26,6 +26,9 @@
     $: display_q.set(question);
     $: display_a.set(answer);
 </script>
+<h2>
+	Create
+</h2>
 
 <div>
     <form action="?/saveQuestionAnswerPair" method="POST">

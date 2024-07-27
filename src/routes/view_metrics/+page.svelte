@@ -1,20 +1,23 @@
 <script lang="ts">
-    // show metrics for all questions
-	import { writable } from 'svelte/store';
-
 	/** @type {import('./$types').PageData} */
 	export let data;
 
-    console.log(data);
+    function getHumanReadableDate(ms: string) {
+        const d = new Date(ms);
+        return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
+    }
 
-	const displayed_link = writable();
-
-	//$: displayed_answer.set(answer)
+    function getDurationMs(ms: number) {
+        return Math.round(ms/(1000*60));
+    }
 </script>
 
 <svelte:head>
 	<title>Metrics</title>
 </svelte:head>
+<h2>
+    Metrics
+</h2>
 
 <section>
     <table>
@@ -27,7 +30,7 @@
                 <th>Page Views</th>
                 <th>Start Time</th>
                 <th>End Time</th>
-                <th>Total Time</th>
+                <th>Total Time Minutes</th>
             </tr>
         </thead>
         <tbody>
@@ -38,9 +41,9 @@
                     <td>{answer}</td>
                     <td>{correct}</td>
                     <td>{totalVisits}</td>
-                    <td>{start}</td>
-                    <td>{end}</td>
-                    <td>{totalTimeSpentMs}</td>
+                    <td>{getHumanReadableDate(start)}</td>
+                    <td>{getHumanReadableDate(end)}</td>
+                    <td>{getDurationMs(totalTimeSpentMs)}</td>
                 </tr>
             {/each}
         </tbody>

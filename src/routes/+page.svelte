@@ -14,6 +14,10 @@
 	<meta name="description" content="Create question answer pairs" />
 </svelte:head>
 
+<h2>
+	View
+</h2>
+
 {#if data.qs.length === 0}
 	<a href="/create">Create a question</a>
 {/if}
