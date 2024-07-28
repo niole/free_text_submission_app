@@ -28,6 +28,7 @@
 			<th>answer</th>
 			<th></th>
 			<th></th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -36,10 +37,26 @@
 				<td>{q.question}</td>
 				<td>{q.answer}</td>
 				<td>
+					<button on:click={() => copyUrlToClipBoard(q)}>link</button>
+				</td>
+				<td>
 					<a href={`/create?pairId=${q.id}`}>edit</a>
 				</td>
 				<td>
-					<button on:click={() => copyUrlToClipBoard(q)}>copy url</button>
+					<button
+						on:click={() => {
+							const shouldDelete = confirm("Are you sure?");
+							if (shouldDelete) {
+								fetch(`/api/question/${q.id}`, { method: 'DELETE'})
+								.then(() => {
+									window.location.reload();
+								})
+								.catch(e => {
+									console.error(`Failed to delete question ${q.id}`, e);
+									alert('Failed to delete question');
+								});
+							}
+						}}>delete</button>
 				</td>
 			</tr>
 		{/each}

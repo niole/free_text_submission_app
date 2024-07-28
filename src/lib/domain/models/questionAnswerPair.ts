@@ -33,3 +33,7 @@ export async function findQuestionAnswerPair(id: string): Promise<QuestionAnswer
 export function listQuestionAnswerPairs(ownerId: string): Promise<QuestionAnswerPairModel[]> {
     return QuestionAnswerPairDbModel.findAll({ where: { ownerId } }).then(x => x.map(y => y.toJSON()));
 }
+
+export function deleteQuestionAnswerPair(id: string): Promise<number> {
+    return QuestionAnswerPairDbModel.destroy({ where: { id } });
+}
