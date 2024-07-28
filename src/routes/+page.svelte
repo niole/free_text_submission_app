@@ -45,9 +45,3 @@
 		{/each}
 	</tbody>
 </table>
-
-<style>
-	th {
-		text-align: left;
-	}
-</style>
