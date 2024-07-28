@@ -35,5 +35,6 @@ export function listQuestionAnswerPairs(ownerId: string): Promise<QuestionAnswer
 }
 
 export function deleteQuestionAnswerPair(id: string): Promise<number> {
+    // TODO do metrics get deleted too?
     return QuestionAnswerPairDbModel.destroy({ where: { id } });
 }
