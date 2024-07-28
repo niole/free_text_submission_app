@@ -1,11 +1,7 @@
 <script lang="ts">
+    import { getHumanReadableDate } from '$lib/utils';
 	/** @type {import('./$types').PageData} */
 	export let data;
-
-    function getHumanReadableDate(ms: string) {
-        const d = new Date(ms);
-        return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
-    }
 
     function getDurationMs(ms: number) {
         return Math.round(ms/(1000*60));
@@ -30,7 +26,7 @@
                 <th>Page Views</th>
                 <th>Start Time</th>
                 <th>End Time</th>
-                <th>Total Time Minutes</th>
+                <th>Total Time</th>
                 <th></th>
             </tr>
         </thead>
@@ -44,7 +40,7 @@
                     <td>{totalVisits}</td>
                     <td>{getHumanReadableDate(start)}</td>
                     <td>{getHumanReadableDate(end)}</td>
-                    <td>{getDurationMs(totalTimeSpentMs)}</td>
+                    <td>{getDurationMs(totalTimeSpentMs)} minutes</td>
                     <td><a href={`/view_metrics/question/${pairId}/email/${email}`}>view all</a></td>
                 </tr>
             {/each}

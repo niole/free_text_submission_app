@@ -52,6 +52,44 @@ type QuestionAnswerAnalysis = {
     end?: Date;
 };
 
+export type UserQuestionMetric = {
+    name: string,
+    createdAt: Date,
+    question: string,
+    email: string,
+    answer?: string,
+    correct?: boolean,
+};
+
+export async function getMetricsByEmail(email: string, pairId: string): Promise<UserQuestionMetric[]> {
+    const metrics = await MetricDbModel.findAll({
+        where: {
+            email,
+            pairId,
+        },
+
+        order: [['createdAt', 'ASC']],
+
+        include: [
+            QuestionAnswerPairDbModel,
+            AnswerDbModel,
+        ],
+    });
+
+    return metrics.map(metric => {
+        const m = metric.toJSON()
+        const answer = m.name === 'AnswerQuestion' ?  m.Answer?.answer : undefined;
+        return {
+            name: m.name,
+            createdAt: m.createdAt,
+            question: m.QuestionAnswerPair?.question,
+            email,
+            answer,
+            correct: m.Answer?.correct,
+        };
+    })
+}
+
 export async function getAnalysis(): Promise<QuestionAnswerAnalysis[]> {
     // user time spent on question and user answer and question
     const startTimes = await MetricDbModel.findAll({

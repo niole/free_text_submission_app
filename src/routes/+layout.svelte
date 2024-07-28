@@ -5,9 +5,9 @@
 <div class="app">
 	<nav>
 		<ol>
-			<li><a data-sveltekit-preload-data="false" href="/">View</a></li>
-			<li><a data-sveltekit-preload-data="false" href="/create">Create</a></li>
-			<li><a data-sveltekit-preload-data="false" href="/view_metrics">Metrics</a></li>
+			<li><a href="/">View</a></li>
+			<li><a href="/create">Create</a></li>
+			<li><a href="/view_metrics">Metrics</a></li>
 		</ol>
 	</nav>
 	<main>
