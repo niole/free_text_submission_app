@@ -3,6 +3,7 @@
 	/** @type {import('./$types').PageData} */
     export let data: { question: string, email: string, id: string, metrics: any[] };
 </script>
+<a href="/view_metrics">Back</a>
 <h2>
     {data.email}'s metrics for question:
 </h2>
