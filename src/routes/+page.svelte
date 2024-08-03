@@ -10,8 +10,8 @@
 </script>
 
 <svelte:head>
-	<title>Create</title>
-	<meta name="description" content="Create question answer pairs" />
+	<title>View</title>
+	<meta name="description" content="View question answer pairs" />
 </svelte:head>
 
 <h2>

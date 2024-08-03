@@ -1,5 +1,30 @@
 <script>
+	import { jwtDecode } from "jwt-decode";
+    import { onMount } from "svelte";
 	import '../app.css';
+
+	const YOUR_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+	onMount(() => {
+		function handleCredentialResponse(res) {
+			const cred = jwtDecode(res.credential);
+			console.log(cred);
+			console.log(cred.email);
+			document.cookie = `email=${cred.email}; max-age: 86400; SameSite=Strict; Path=/`;
+		}
+//		window.google.accounts.id.initialize({
+//			client_id: YOUR_CLIENT_ID,
+//			callback: handleCredentialResponse
+//		});
+//		window.google.accounts.id.prompt(notification => {
+//			console.log(notification);
+//            if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+//				console.log('skipped');
+//                document.cookie =  `g_state=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+//                google.accounts.id.prompt();
+//            }
+//		});
+	});
 </script>
 
 <div class="app">
