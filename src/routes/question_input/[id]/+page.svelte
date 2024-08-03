@@ -5,7 +5,6 @@
 	/** @type {import('./$types').PageData} */
 	export let data;
 	let { question, id } = data;
-	const viewingUser = 'niolenelson@gmail.com';
 
 	onMount(() => {
 		fetch('?/handlePageVisit', {
@@ -13,7 +12,7 @@
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded'
 			},
-			body: `id=${id}&viewingUser=${viewingUser}`,
+			body: `id=${id}`,
 		});
 	});
 </script>
@@ -26,7 +25,6 @@
 
 	<form action="?/submitAnswer" method="POST">
 		<input type="hidden" name="id" value={id} />
-		<input type="hidden" name="email" value={viewingUser} />
 
 		<h1>
 		Question

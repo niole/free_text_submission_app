@@ -1,9 +1,10 @@
 import OpenAI from "openai";
 import { type RequestEvent } from '@sveltejs/kit';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { type QuestionAnswerPairModel, findQuestionAnswerPair } from '$lib/domain/models/questionAnswerPair';
 import { createAnswerQuestionMetric, createMetric, createViewQuestionMetric } from '$lib/domain/models/metric';
 import { createAnswer } from '$lib/domain/models/answer';
+import { getViewingUserEmail } from '$lib/utils';
 
 const openai = new OpenAI({ apiKey: import.meta.env.VITE_OPENAI_KEY });
 
@@ -32,7 +33,7 @@ function getAssistentGrade(completion: any): boolean | null {
 export const actions = {
     handlePageVisit: async (event: RequestEvent) => {
         const body = await event.request.formData();
-        const viewingUser = body.get('viewingUser')?.toString();
+        const viewingUser = getViewingUserEmail(event);
         const id = body.get('id')?.toString();
 
         if (!id) {
@@ -40,7 +41,7 @@ export const actions = {
         }
 
         if (!viewingUser) {
-            error(400, 'Missing viewingUser information');
+            error(400, 'Missing viewing user information');
         }
 
         const viewPageMetric = createViewQuestionMetric(viewingUser, id);
@@ -51,7 +52,7 @@ export const actions = {
         const body = await event.request.formData();
         const answer = body.get('answer')?.toString();
         const id = body.get('id')?.toString();
-        const email: string | undefined = body.get('email')?.toString();
+        const email = getViewingUserEmail(event);
 
         if (!email) {
             error(400, 'Missing email');
@@ -88,8 +89,7 @@ export const actions = {
                 createMetric(createAnswerQuestionMetric(email, pair.id, userAnswer.id));
 
                 if (passed !== null && passed) {
-                    // TODO have a good response
-                    return;
+                    return redirect(302, '/correct');
                 } else {
                     if (passed === null) {
                         console.error(`Chat assistant gave inscrutible answer: ${JSON.stringify(completion)}`);
