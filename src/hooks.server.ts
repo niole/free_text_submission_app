@@ -31,10 +31,12 @@ export async function handle({ event, resolve }) {
         const {tokens} = await oauth2Client.getToken(code)
         const { email } = jwtDecode(tokens.id_token);
 
+   
+        const refreshSeconds = import.meta.env.VITE_COOKIE_REFRESH_SECONDS;
         return new Response('', {
             headers: new Headers({
                 Location: '/',
-                'Set-Cookie': `email=${email}; Max-Age=10`
+                'Set-Cookie': `email=${email}; Max-Age=${refreshSeconds}`
             }),
             status: 302,
         });
