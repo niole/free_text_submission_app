@@ -6,16 +6,14 @@ const scope = [
   'https://www.googleapis.com/auth/userinfo.profile',
 ];
 
-const url = oauth2Client.generateAuthUrl({
-  // 'online' (default) or 'offline' (gets refresh_token)
-  access_type: 'offline',
-
-  // If you only need one scope, you can pass it as a string
-  scope
-});
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
+    if (event.url.pathname.startsWith('/loggedout')) {
+        const response = await resolve(event);
+        return response;
+    }
+
     if (event.url.pathname.startsWith('/oathcallback')) {
         const code = event.url.searchParams.get('code');
         const {tokens} = await oauth2Client.getToken(code)
@@ -34,6 +32,11 @@ export async function handle({ event, resolve }) {
         await getVerifiedUser(event);
     } catch (error) {
         console.error('Failed to verify user: ', error);
+
+        const url = oauth2Client.generateAuthUrl({
+            access_type: 'offline',
+            scope
+        });
         if (error instanceof UnauthenticatedError) {
             // initiate login flow
             return redirect(302, url);
