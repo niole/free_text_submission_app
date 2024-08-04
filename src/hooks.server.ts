@@ -1,14 +1,5 @@
-import {google} from 'googleapis';
 import {redirect, error as errorResponse} from '@sveltejs/kit';
-import { jwtDecode } from "jwt-decode";
-import cookie from 'cookie';
-import { UnauthorizedError } from '$lib/utils';
-
-const oauth2Client = new google.auth.OAuth2(
-    import.meta.env.VITE_GOOGLE_CLIENT_ID,
-    import.meta.env.VITE_GOOGLE_CLIENT_SECRET,
-  'http://localhost:5173/oathcallback'
-);
+import { getVerifiedUser, oauth2Client, UnauthenticatedError, UnauthorizedError } from '$lib/server/utils';
 
 const scope = [
   'https://www.googleapis.com/auth/userinfo.email',
@@ -25,31 +16,38 @@ const url = oauth2Client.generateAuthUrl({
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
-    const sessionEmail = cookie.parse(event.request.headers.get('cookie') ?? '').email;
     if (event.url.pathname.startsWith('/oathcallback')) {
         const code = event.url.searchParams.get('code');
         const {tokens} = await oauth2Client.getToken(code)
-        const { email } = jwtDecode(tokens.id_token);
-
    
         const refreshSeconds = import.meta.env.VITE_COOKIE_REFRESH_SECONDS;
         return new Response('', {
             headers: new Headers({
                 Location: '/',
-                'Set-Cookie': `email=${email}; Max-Age=${refreshSeconds}`
+                'Set-Cookie': `user=${tokens.id_token}; Max-Age=${refreshSeconds}`
             }),
             status: 302,
         });
     }
-    if (!sessionEmail) {
-        return redirect(302, url);
+
+    try {
+        await getVerifiedUser(event);
+    } catch (error) {
+        console.error('Failed to verify user: ', error);
+        if (error instanceof UnauthenticatedError) {
+            // initiate login flow
+            return redirect(302, url);
+        }
     }
+
     const response = await resolve(event);
     return response;
 }
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handleError({ error }) {
+    console.error(error);
+
     if (error instanceof UnauthorizedError) {
         return errorResponse(403, 'You are not authorized to access this page');
     }

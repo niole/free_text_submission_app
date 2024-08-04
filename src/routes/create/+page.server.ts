@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 import { error, type RequestEvent } from '@sveltejs/kit';
 import {findQuestionAnswerPair, createQuestionAnswerPair,  updateQuestionAnswerPair, listQuestionAnswerPairs } from '$lib/domain/models/questionAnswerPair';
-import { handleTeacherRoute } from '$lib/utils';
+import { handleTeacherRoute } from '$lib/server/utils';
 
 const APP_DOMAIN = import.meta.env.VITE_APP_DOMAIN;
 
@@ -36,7 +36,7 @@ export const actions = {
 
 /** @type {import('./$types').PageLoad} */
 export async function load(e: RequestEvent) {
-    handleTeacherRoute(e);
+    await handleTeacherRoute(e);
     const pairId = e.url.searchParams.get('pairId');
 
     if (pairId) {

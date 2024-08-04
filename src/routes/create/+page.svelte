@@ -79,15 +79,6 @@
 </div>
 
 <style>
-
-    label {
-        display: block;
-    }
-
-    textarea {
-        width: 100%;
-    }
-
     .displayed_input {
         white-space: pre-line;
         padding: 5px;

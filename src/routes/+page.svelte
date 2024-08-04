@@ -2,8 +2,6 @@
 	import { Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
 	import { FileCopyAltOutline } from 'flowbite-svelte-icons';
 
-	// TODO gate with google auth, only allow teacher
-	// add teacher registration page or build with configuration for mom only dnelson@mvrhs.org
 	/** @type {import('./$types').PageData} */
 	export let data;
 

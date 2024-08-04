@@ -4,7 +4,7 @@ import { error, redirect } from '@sveltejs/kit';
 import { type QuestionAnswerPairModel, findQuestionAnswerPair } from '$lib/domain/models/questionAnswerPair';
 import { createAnswerQuestionMetric, createMetric, createViewQuestionMetric } from '$lib/domain/models/metric';
 import { createAnswer } from '$lib/domain/models/answer';
-import { getViewingUserEmail } from '$lib/utils';
+import { getViewingUserEmail } from '$lib/server/utils';
 
 const openai = new OpenAI({ apiKey: import.meta.env.VITE_OPENAI_KEY });
 
@@ -33,7 +33,7 @@ function getAssistentGrade(completion: any): boolean | null {
 export const actions = {
     handlePageVisit: async (event: RequestEvent) => {
         const body = await event.request.formData();
-        const viewingUser = getViewingUserEmail(event);
+        const viewingUser = await getViewingUserEmail(event);
         const id = body.get('id')?.toString();
 
         if (!id) {
@@ -52,7 +52,7 @@ export const actions = {
         const body = await event.request.formData();
         const answer = body.get('answer')?.toString();
         const id = body.get('id')?.toString();
-        const email = getViewingUserEmail(event);
+        const email = await getViewingUserEmail(event);
 
         if (!email) {
             error(400, 'Missing email');
