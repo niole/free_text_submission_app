@@ -4,6 +4,7 @@
 </svelte:head>
 
 <script lang="ts">
+    import { Button, Textarea, Label, Input } from 'flowbite-svelte';
     import { writable } from 'svelte/store';
     import { onMount } from "svelte";
 
@@ -26,7 +27,7 @@
     $: display_q.set(question);
     $: display_a.set(answer);
 </script>
-<h2>
+<h2 class="text-3xl">
 	Create
 </h2>
 
@@ -34,8 +35,8 @@
     <form action="?/saveQuestionAnswerPair" method="POST">
         <input type="hidden" id="pairId" name="pairId" value={$display_pair_id} />
         <div>
-            <label for="question">Question</label>
-            <textarea
+            <Label for="question">Question</Label>
+            <Textarea
                 on:keyup={e => question = e.target.value}
                 type="text"
                 id="question"
@@ -46,8 +47,8 @@
         </div>
 
         <div>
-            <label for="answer">Answer</label>
-            <textarea
+            <Label for="answer">Answer</Label>
+            <Textarea
                 on:keyup={e => answer = e.target.value}
                 type="text"
                 id="answer"
@@ -57,20 +58,21 @@
             />
         </div>
 
-        <button
+        <Button
+            color="light"
             disabled={!$display_q || !$display_a}
             formaction="?/saveQuestionAnswerPair">
             {$display_pair_id ? 'Edit' : 'Submit'}
-        </button>
+        </Button>
     </form>
 </div>
 
 <div class="displayed_output">
-    <label for="question">Question</label>
+    <Label for="question">Question</Label>
     <pre class="displayed_input">
         {$display_q ?? ''}
     </pre>
-    <label for="answer">Answer</label>
+    <Label for="answer">Answer</Label>
     <pre class="displayed_input">
         {$display_a ?? ''}
     </pre>

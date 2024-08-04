@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
     import { getHumanReadableDate } from '$lib/utils';
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -11,39 +12,48 @@
 <svelte:head>
 	<title>Metrics</title>
 </svelte:head>
-<h2>
+<h2 class="text-3xl">
     Metrics
 </h2>
 
 <section>
-    <table>
-        <thead>
-            <tr>
-                <th>Email</th>
-                <th>Question</th>
-                <th>User Answer</th>
-                <th>Correct</th>
-                <th>Page Views</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th>Total Time</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
+    <Table>
+        <TableHead>
+            <TableHeadCell>Email</TableHeadCell>
+            <TableHeadCell>Question</TableHeadCell>
+            <TableHeadCell>User Answer</TableHeadCell>
+            <TableHeadCell>Correct</TableHeadCell>
+            <TableHeadCell>Page Views</TableHeadCell>
+            <TableHeadCell>Start Time</TableHeadCell>
+            <TableHeadCell>End Time</TableHeadCell>
+            <TableHeadCell>Total Time</TableHeadCell>
+            <TableHeadCell></TableHeadCell>
+        </TableHead>
+        <TableBody>
             {#each data.metrics as { pairId, question, answer, email, correct, totalVisits, totalTimeSpentMs, start, end }}
-                <tr>
-                    <td>{email}</td>
-                    <td>{question}</td>
-                    <td>{answer}</td>
-                    <td>{correct}</td>
-                    <td>{totalVisits}</td>
-                    <td>{getHumanReadableDate(start)}</td>
-                    <td>{getHumanReadableDate(end)}</td>
-                    <td>{getDurationMs(totalTimeSpentMs)} minutes</td>
-                    <td><a href={`/view_metrics/question/${pairId}/email/${email}`}>view all</a></td>
-                </tr>
+                <TableBodyRow>
+                    <TableBodyCell>{email}</TableBodyCell>
+                    <TableBodyCell tdClass="handle-overflow">{question}</TableBodyCell>
+                    <TableBodyCell tdClass="handle-overflow">{answer}</TableBodyCell>
+                    <TableBodyCell>{correct}</TableBodyCell>
+                    <TableBodyCell>{totalVisits}</TableBodyCell>
+                    <TableBodyCell>{getHumanReadableDate(start)}</TableBodyCell>
+                    <TableBodyCell>{getHumanReadableDate(end)}</TableBodyCell>
+                    <TableBodyCell>{getDurationMs(totalTimeSpentMs)} minutes</TableBodyCell>
+                    <TableBodyCell><Button color="light" href={`/view_metrics/question/${pairId}/email/${email}`}>view all</Button></TableBodyCell>
+                </TableBodyRow>
             {/each}
-        </tbody>
-    </table>
+        </TableBody>
+    </Table>
 </section>
+
+<style>
+	.handle-overflow {
+		max-width: 200px;
+		white-space: wrap;
+	}
+
+	h2 {
+		margin-bottom: 50px;
+	}
+</style>

@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
+	import { FileCopyAltOutline } from 'flowbite-svelte-icons';
+
 	// TODO gate with google auth, only allow teacher
 	// add teacher registration page or build with configuration for mom only dnelson@mvrhs.org
 	/** @type {import('./$types').PageData} */
@@ -14,36 +17,35 @@
 	<meta name="description" content="View question answer pairs" />
 </svelte:head>
 
-<h2>
+<h2 class="text-3xl">
 	View
 </h2>
 
 {#if data.qs.length === 0}
 	<a href="/create">Create a question</a>
 {/if}
-<table>
-	<thead>
-		<tr>
-			<th>question</th>
-			<th>answer</th>
-			<th></th>
-			<th></th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
+<Table>
+	<TableHead>
+		<TableHeadCell>question</TableHeadCell>
+		<TableHeadCell>answer</TableHeadCell>
+		<TableHeadCell></TableHeadCell>
+		<TableHeadCell></TableHeadCell>
+		<TableHeadCell></TableHeadCell>
+	</TableHead>
+	<TableBody tableBodyClass="divide-y handle-overflow">
 		{#each data.qs as q}
-			<tr>
-				<td>{q.question}</td>
-				<td>{q.answer}</td>
-				<td>
-					<button on:click={() => copyUrlToClipBoard(q)}>link</button>
-				</td>
-				<td>
-					<a href={`/create?pairId=${q.id}`}>edit</a>
-				</td>
-				<td>
-					<button
+			<TableBodyRow>
+				<TableBodyCell tdClass="handle-overflow">{q.question}</TableBodyCell>
+				<TableBodyCell tdClass="handle-overflow">{q.answer}</TableBodyCell>
+				<TableBodyCell>
+					<Button icon="FileCopyAltOutline" color="light" on:click={() => copyUrlToClipBoard(q)}><FileCopyAltOutline/>link</Button>
+				</TableBodyCell>
+				<TableBodyCell>
+					<Button color="light" href={`/create?pairId=${q.id}`}>edit</Button>
+				</TableBodyCell>
+				<TableBodyCell>
+					<Button
+						color="red"
 						on:click={() => {
 							const shouldDelete = confirm("Are you sure?");
 							if (shouldDelete) {
@@ -56,9 +58,16 @@
 									alert('Failed to delete question');
 								});
 							}
-						}}>delete</button>
-				</td>
-			</tr>
+						}}>delete</Button>
+				</TableBodyCell>
+			</TableBodyRow>
 		{/each}
-	</tbody>
-</table>
+	</TableBody>
+</Table>
+
+<style>
+	.handle-overflow {
+		max-width: 200px;
+		white-space: wrap;
+	}
+</style>

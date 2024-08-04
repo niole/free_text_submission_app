@@ -1,40 +1,16 @@
 <script>
-	import { jwtDecode } from "jwt-decode";
-    import { onMount } from "svelte";
 	import '../app.css';
-
-	const YOUR_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-
-	onMount(() => {
-		function handleCredentialResponse(res) {
-			const cred = jwtDecode(res.credential);
-			console.log(cred);
-			console.log(cred.email);
-			document.cookie = `email=${cred.email}; max-age: 86400; SameSite=Strict; Path=/`;
-		}
-//		window.google.accounts.id.initialize({
-//			client_id: YOUR_CLIENT_ID,
-//			callback: handleCredentialResponse
-//		});
-//		window.google.accounts.id.prompt(notification => {
-//			console.log(notification);
-//            if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-//				console.log('skipped');
-//                document.cookie =  `g_state=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT`;
-//                google.accounts.id.prompt();
-//            }
-//		});
-	});
+	import { Navbar, NavLi, NavUl } from 'flowbite-svelte';
 </script>
 
 <div class="app">
-	<nav>
-		<ol>
-			<li><a href="/">View</a></li>
-			<li><a href="/create">Create</a></li>
-			<li><a href="/view_metrics">Metrics</a></li>
-		</ol>
-	</nav>
+	<Navbar rounded color="form">
+		<NavUl>
+			<NavLi><a href="/">View</a></NavLi>
+			<NavLi><a href="/create">Create</a></NavLi>
+			<NavLi><a href="/view_metrics">Metrics</a></NavLi>
+		</NavUl>
+	</Navbar>
 	<main>
 		<slot />
 	</main>
