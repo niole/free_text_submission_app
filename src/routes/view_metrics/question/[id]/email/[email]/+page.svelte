@@ -1,20 +1,31 @@
 <script lang="ts">
     import { writable } from 'svelte/store';
+    import { onMount } from 'svelte';
     import { Input, Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
     import { doFetch, debounce, getHumanReadableDate } from '$lib/utils';
-    import { type UserQuestionMetric } from '$lib/types';
+    import { type QuestionAnswerPairModel, type UserQuestionMetric } from '$lib/types';
+    import Dropdown from '$lib/components/Dropdown.svelte';
 
 	/** @type {import('./$types').PageData} */
     export let data: { question: string, email: string, id: string, metrics: UserQuestionMetric[] };
 
     let metrics: UserQuestionMetric[] = data.metrics;
+    let email: string = data.email;
+    let question: string = data.question;
+    let id: string = data.id;
+    let questions: QuestionAnswerPairModel[] = [];
 
+    const display_email = writable();
+    const display_question = writable();
+    const display_questions = writable();
     const display_metrics = writable();
 
     $: display_metrics.set(metrics);
+    $: display_question.set(question);
+    $: display_email.set(email);
+    $: display_questions.set(questions);
 
-    function searchMetrics(q: string) {
-        const { id, email } = data;
+    const searchMetrics = (q: string = '') => {
         doFetch(`/api/metrics/question/${id}/email/${email}?q=${q}`)
             .then(x => {
                 metrics = x.data;
@@ -23,6 +34,23 @@
     }
 
     const debouncedSearchMetrics = debounce(searchMetrics);
+
+    function updateEmail(newEmail: string) {
+        email = newEmail;
+        searchMetrics();
+    }
+    function updateQuestion(newQuestionId: string) {
+        id = newQuestionId;
+        question = questions.find(q => q.id === newQuestionId)?.question ?? '';
+        searchMetrics();
+    }
+
+    onMount(() => {
+        doFetch('/api/question')
+        .then(x => {
+            questions = x.data;
+        }).catch(e => console.error(e));
+    });
 </script>
 
 <div class="mb-5">
@@ -30,9 +58,13 @@
 </div>
 
 <section>
-    {data.email}'s metrics for question:
+    metrics for <Dropdown
+        value={$display_email}
+        items={[{value: 'niolenelson@gmail.com', label: 'niolenelson@gmail.com' }, {value: 'all', label: 'all'}]}
+        onChange={updateEmail}
+    /> for <Dropdown onChange={updateQuestion} label="question" items={questions.map(q => ({ value: q.id, label: q.question }))} />
     <pre>
-        {data.question}
+        {$display_question}
     </pre>
 </section>
 

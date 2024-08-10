@@ -1,6 +1,6 @@
 import * as sequelize from 'sequelize';
 import { MetricDbModel, QuestionAnswerPairDbModel, AnswerDbModel, UserDbModel } from './db';
-import { type UserQuestionMetric } from '$lib/types';
+import { type QuestionAnswerAnalysis, type UserQuestionMetric } from '$lib/types';
 
 export type Metric = {
     /** the time the metric was created */
@@ -40,18 +40,6 @@ export function createAnswerQuestionMetric(viewingUser: string, pairId: string, 
         answerId,
     };
 }
-
-type QuestionAnswerAnalysis = {
-    question: string;
-    answer: string;
-    pairId: string;
-    email: string;
-    correct: boolean;
-    totalVisits: number;
-    totalTimeSpentMs: number;
-    start: Date;
-    end?: Date;
-};
 
 export async function getMetricsByEmail(
     email: string,
@@ -108,7 +96,11 @@ export async function getMetricsByEmail(
     })
 }
 
-export async function getAnalysis(): Promise<QuestionAnswerAnalysis[]> {
+export async function getAnalysis(
+    sortKey: string = 'createdAt',
+    sortDir: 'ASC' | 'DESC' = 'ASC',
+    query?: string,
+): Promise<QuestionAnswerAnalysis[]> {
     // user time spent on question and user answer and question
     const startTimes = await MetricDbModel.findAll({
         where: {
@@ -183,5 +175,15 @@ export async function getAnalysis(): Promise<QuestionAnswerAnalysis[]> {
         };
     });
 
-    return results;
+    const dateCols = ['start', 'end'];
+    const sortByDateCol = dateCols.includes(sortKey);
+    const sortableValueGetter = (x: any) => sortByDateCol ? x[sortKey].getTime() : x[sortKey];
+
+    return results.sort((a, b) => {
+        if (sortDir === 'ASC') {
+            return sortableValueGetter(a) - sortableValueGetter(b);
+        } else {
+            return sortableValueGetter(b) - sortableValueGetter(a);
+        }
+    });
 }

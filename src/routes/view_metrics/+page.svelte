@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
+    import { type QuestionAnswerAnalysis } from '$lib/types';
     import { getHumanReadableDate } from '$lib/utils';
+
 	/** @type {import('./$types').PageData} */
-	export let data;
+	export let data: { metrics: QuestionAnswerAnalysis[] };
 
     function getDurationMs(ms: number) {
         return Math.round(ms/(1000*60));

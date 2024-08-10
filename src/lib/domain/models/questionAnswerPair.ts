@@ -1,13 +1,7 @@
 import { v4 } from 'uuid';
+import * as sequelize from 'sequelize';
+import { type QuestionAnswerPairModel } from '$lib/types';
 import { QuestionAnswerPairDbModel } from './db';
-
-export type QuestionAnswerPairModel = {
-    id?: string,
-    ownerId: string,
-    question: string,
-    answer: string,
-    link: string,
-};
 
 export function createQuestionAnswerPair(pair: QuestionAnswerPairModel) {
     return QuestionAnswerPairDbModel.create({...pair, id: pair.id ?? v4() });
@@ -30,8 +24,18 @@ export async function findQuestionAnswerPair(id: string): Promise<QuestionAnswer
     return QuestionAnswerPairDbModel.findOne({ where: { id } }).then(x => x?.toJSON());
 }
 
-export function listQuestionAnswerPairs(ownerId: string): Promise<QuestionAnswerPairModel[]> {
-    return QuestionAnswerPairDbModel.findAll({ where: { ownerId } }).then(x => x.map(y => y.toJSON()));
+export function listQuestionAnswerPairs(ownerId?: string, query?: string): Promise<QuestionAnswerPairModel[]> {
+    const where = {};
+    if (ownerId) {
+        where.ownerId = ownerId;
+    }
+
+    if (query) {
+        where.question = {
+            [sequelize.Op.like]: `%${query}%`,
+        };
+    }
+    return QuestionAnswerPairDbModel.findAll({ where }).then(x => x.map(y => y.toJSON()));
 }
 
 export function deleteQuestionAnswerPair(id: string): Promise<number> {
