@@ -8,7 +8,7 @@ const APP_DOMAIN = import.meta.env.VITE_APP_DOMAIN;
 /** @type {import('./$types').Actions} */
 export const actions = {
     saveQuestionAnswerPair: async (event: RequestEvent) => {
-        console.log(event)
+        await handleTeacherRoute(event)
         const body = await event.request.formData();
         const question = body.get('question')?.toString();
         const answer = body.get('answer')?.toString();

@@ -1,8 +1,10 @@
 import { getMetricsByEmail } from '$lib/domain/models/metric';
 import { findQuestionAnswerPair } from '$lib/domain/models/questionAnswerPair';
+import { handleTeacherRoute } from '$lib/server/utils';
 
-export async function load({ params }) {
-    const { email, id } = params;
+export async function load(event) {
+    await handleTeacherRoute(event)
+    const { email, id } = event.params;
     let question;
     try {
         const pair = await findQuestionAnswerPair(id);

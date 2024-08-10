@@ -1,7 +1,9 @@
 import { json } from '@sveltejs/kit'
 import { getAnalysis } from '$lib/domain/models/metric';
+import { handleTeacherRoute } from '$lib/server/utils';
 
 export async function GET(event) {
+    await handleTeacherRoute(event);
     const search = event.url.searchParams
     const sortKey = search.get('sortKey') ?? undefined;
     const sortDir = search.get('sortDir') ?? undefined;

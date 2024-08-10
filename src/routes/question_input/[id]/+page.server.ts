@@ -1,7 +1,8 @@
 import OpenAI from "openai";
 import { type RequestEvent } from '@sveltejs/kit';
 import { error, redirect } from '@sveltejs/kit';
-import { type QuestionAnswerPairModel, findQuestionAnswerPair } from '$lib/domain/models/questionAnswerPair';
+import { findQuestionAnswerPair } from '$lib/domain/models/questionAnswerPair';
+import { type QuestionAnswerPairModel } from '$lib/types';
 import { createAnswerQuestionMetric, createMetric, createViewQuestionMetric } from '$lib/domain/models/metric';
 import { createAnswer } from '$lib/domain/models/answer';
 import { getViewingUserEmail } from '$lib/server/utils';
@@ -107,6 +108,7 @@ export const actions = {
 
 /** @type {import('./$types').PageLoad} */
 export async function load(event) {
+    await getViewingUserEmail(event);
     const { params } = event;
 
     const id = params.id?.toString();

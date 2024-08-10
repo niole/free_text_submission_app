@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit'
 import { getMetricsByEmail } from '$lib/domain/models/metric';
+import { handleTeacherRoute } from '$lib/server/utils';
 
 /**
  *  Lists all the metrics for a question for a user by email
@@ -8,6 +9,7 @@ import { getMetricsByEmail } from '$lib/domain/models/metric';
  * @returns 
  */
 export async function GET(event) {
+    await handleTeacherRoute(event);
     const { id, email } = event.params;
     const search = event.url.searchParams
     const sortKey = search.get('sortKey') ?? undefined;
