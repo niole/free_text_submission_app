@@ -10,3 +10,17 @@ export function debounce(f, sleepMs = 200) {
         id = setTimeout(() => f(a), sleepMs);
     }
 }
+
+export async function doFetch(url: string, opts = undefined) {
+    return fetch(url, opts)
+    .then(x => {
+        if (x.ok) {
+            return x.json();
+        } else {
+            return x.error().text().then(x => {
+                throw new Error(x);
+            });
+        }
+    });
+
+}

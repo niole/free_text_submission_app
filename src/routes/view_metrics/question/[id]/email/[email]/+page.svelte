@@ -1,7 +1,7 @@
 <script lang="ts">
     import { writable } from 'svelte/store';
     import { Input, Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
-    import { debounce, getHumanReadableDate } from '$lib/utils';
+    import { doFetch, debounce, getHumanReadableDate } from '$lib/utils';
     import { type UserQuestionMetric } from '$lib/types';
 
 	/** @type {import('./$types').PageData} */
@@ -15,8 +15,7 @@
 
     function searchMetrics(q: string) {
         const { id, email } = data;
-        fetch(`/api/metrics/question/${id}/email/${email}?q=${q}`)
-            .then(x => x.json())
+        doFetch(`/api/metrics/question/${id}/email/${email}?q=${q}`)
             .then(x => {
                 metrics = x.data;
             })
