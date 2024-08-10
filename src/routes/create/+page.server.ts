@@ -8,6 +8,7 @@ const APP_DOMAIN = import.meta.env.VITE_APP_DOMAIN;
 /** @type {import('./$types').Actions} */
 export const actions = {
     saveQuestionAnswerPair: async (event: RequestEvent) => {
+        console.log(event)
         const body = await event.request.formData();
         const question = body.get('question')?.toString();
         const answer = body.get('answer')?.toString();
@@ -44,7 +45,7 @@ export async function load(e: RequestEvent) {
             const pair = await findQuestionAnswerPair(pairId)
             return { pair };
         } catch (e){
-            console.error(`Couldn't retrieve queswtion answer pair ${pairId}`, e);
+            console.error(`Couldn't retrieve question answer pair ${pairId}`, e);
             error(404, 'Question not found');
         }
     }

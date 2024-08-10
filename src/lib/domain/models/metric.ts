@@ -1,5 +1,6 @@
 import * as sequelize from 'sequelize';
 import { MetricDbModel, QuestionAnswerPairDbModel, AnswerDbModel, UserDbModel } from './db';
+import { type UserQuestionMetric } from '$lib/types';
 
 export type Metric = {
     /** the time the metric was created */
@@ -52,29 +53,46 @@ type QuestionAnswerAnalysis = {
     end?: Date;
 };
 
-export type UserQuestionMetric = {
-    name: string,
-    createdAt: Date,
-    question: string,
+export async function getMetricsByEmail(
     email: string,
-    answer?: string,
-    correct?: boolean,
-};
+    pairId: string,
+    query?: string,
+    sortKey: string = 'createdAt',
+    sortDir: 'ASC' | 'DESC' = 'ASC',
+): Promise<UserQuestionMetric[]> {
 
-export async function getMetricsByEmail(email: string, pairId: string): Promise<UserQuestionMetric[]> {
-    const metrics = await MetricDbModel.findAll({
-        where: {
-            email,
-            pairId,
-        },
+    type WhereClause = {
+        email: string,
+        pairId: string,
+        name?: any,
+        QuestionAnswerPair?: { question: any },
+    };
 
-        order: [['createdAt', 'ASC']],
+    const where: WhereClause = {
+        email,
+        pairId,
+    };
+
+    const dbQuery = {
+        where,
+
+        order: [[sortKey, sortDir]],
 
         include: [
             QuestionAnswerPairDbModel,
             AnswerDbModel,
         ],
-    });
+    };
+
+    if (query) {
+        const textSearchQuery = {
+            [sequelize.Op.like]: `%${query}%`,
+        };
+
+        dbQuery.where.name = textSearchQuery;
+    }
+
+    const metrics = await MetricDbModel.findAll(dbQuery)
 
     return metrics.map(metric => {
         const m = metric.toJSON()

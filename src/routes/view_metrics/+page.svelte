@@ -34,7 +34,7 @@
                 <TableBodyRow>
                     <TableBodyCell>{email}</TableBodyCell>
                     <TableBodyCell tdClass="handle-overflow">{question}</TableBodyCell>
-                    <TableBodyCell tdClass="handle-overflow">{answer}</TableBodyCell>
+                    <TableBodyCell tdClass="handle-overflow">{answer ?? ''}</TableBodyCell>
                     <TableBodyCell>{correct}</TableBodyCell>
                     <TableBodyCell>{totalVisits}</TableBodyCell>
                     <TableBodyCell>{getHumanReadableDate(start)}</TableBodyCell>

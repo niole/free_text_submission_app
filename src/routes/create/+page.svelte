@@ -59,10 +59,11 @@
         </div>
 
         <Button
+            type="submit"
             color="light"
             disabled={!$display_q || !$display_a}
             formaction="?/saveQuestionAnswerPair">
-            {$display_pair_id ? 'Edit' : 'Submit'}
+            {$display_pair_id ? 'Update' : 'Submit'}
         </Button>
     </form>
 </div>

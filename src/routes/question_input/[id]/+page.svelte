@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import { Button, Textarea, Label, Input } from 'flowbite-svelte';
 
 	// TODO gate with google auth
 	/** @type {import('./$types').PageData} */
@@ -27,17 +28,17 @@
 		<input type="hidden" name="id" value={id} />
 
 		<h1>
-		Question
+			Question
 		</h1>
 		<div>{question}</div>
 
 		<h1>
-		Answer
+			Answer
 		</h1>
-		<textarea id="answer" name="answer" />
+		<Textarea id="answer" name="answer" />
 
 		<div>
-			<button formaction="?/submitAnswer">Submit</button>
+			<Button color="light" type="submit" formaction="?/submitAnswer">Submit</Button>
 		</div>
 
 	</form>

@@ -6,6 +6,16 @@ VITE_APP_DOMAIN=...
 VITE_TEACHER_EMAIL=...
 ```
 
+# TODO
+
+- verify that secrets stay on BE
+- search by email and question in metrics page
+- export metrics summary to csv
+- pagination for metrics
+- stop logging everything all the time
+- test questions where the answers have math notation in them
+- edit question doesn't work
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
