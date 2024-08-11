@@ -34,9 +34,10 @@ export async function getViewingUserEmail(event): Promise<string> {
     return jwtDecode(user).email;
 }
 
-export async function handleTeacherRoute(event) {
+export async function handleTeacherRoute(event): Promise<string> {
     const sessionEmail = await getViewingUserEmail(event);
     if (sessionEmail !== import.meta.env.VITE_TEACHER_EMAIL) {
         throw new UnauthorizedError('Unauthorized');
     }
+    return sessionEmail;
 }

@@ -1,3 +1,7 @@
+export function buildLink(path: string) {
+    return `${window.location.origin}${path}`;
+}
+
 export function copyUrlToClipBoard(link: string) {
     navigator.clipboard.writeText(link);
 }

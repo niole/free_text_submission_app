@@ -12,3 +12,8 @@ export async function listStudents(): Promise<UserModel[]> {
    
     return metrics.map(x => ({ email: x.toJSON().email }));
 }
+
+export async function getTeacher(): Promise<UserModel | undefined> {
+    const user = await db.UserDbModel.findOne({ where: { email: import.meta.env.VITE_TEACHER_EMAIL } });
+    return user?.toJSON();
+}

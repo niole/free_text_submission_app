@@ -24,7 +24,6 @@ export type QuestionAnswerPairModel = {
     ownerId: string,
     question: string,
     answer: string,
-    link: string,
 };
 
 export type UserModel = {

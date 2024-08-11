@@ -2,7 +2,6 @@
     import { onMount } from "svelte";
     import { Button, Textarea, Label, Input } from 'flowbite-svelte';
 
-	// TODO gate with google auth
 	/** @type {import('./$types').PageData} */
 	export let data;
 	let { question, id } = data;

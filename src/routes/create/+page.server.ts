@@ -1,9 +1,8 @@
 import { v4 } from 'uuid';
 import { error, type RequestEvent } from '@sveltejs/kit';
 import {findQuestionAnswerPair, createQuestionAnswerPair,  updateQuestionAnswerPair, listQuestionAnswerPairs } from '$lib/domain/models/questionAnswerPair';
+import { getTeacher } from '$lib/domain/models/user';
 import { handleTeacherRoute } from '$lib/server/utils';
-
-const APP_DOMAIN = import.meta.env.VITE_APP_DOMAIN;
 
 /** @type {import('./$types').Actions} */
 export const actions = {
@@ -14,6 +13,12 @@ export const actions = {
         const answer = body.get('answer')?.toString();
         const pairId = body.get('pairId')?.toString();
 
+        const teacher = await getTeacher();
+        if (!teacher) {
+            return error(500, 'Teacher not found');
+        }
+
+        const teacherId = teacher.id;
         if (question && answer) {
 
             if (pairId) {
@@ -22,15 +27,14 @@ export const actions = {
                 const id = v4();
                 await createQuestionAnswerPair({
                     id,
-                    ownerId: 'me',
+                    ownerId: teacherId,
                     question,
                     answer,
-                    link: `${APP_DOMAIN}/question_input/${id}`,
                 });
             }
         }
 
-        return { qs: await listQuestionAnswerPairs('me')};
+        return { qs: await listQuestionAnswerPairs(teacherId)};
     },
 
 };

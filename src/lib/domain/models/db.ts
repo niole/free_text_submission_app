@@ -1,3 +1,4 @@
+import { v4 } from 'uuid';
 import { Sequelize, DataTypes } from 'sequelize';
 
 export const sequelize = new Sequelize({
@@ -44,9 +45,9 @@ MetricDbModel.belongsTo(QuestionAnswerPairDbModel, { targetKey: 'id', foreignKey
 await sequelize.sync();
 
 // put teacher in DB
-const found = await UserDbModel.findOne({ where: { id: 'me'} });
+const found = await UserDbModel.findOne({ where: { email: import.meta.env.VITE_TEACHER_EMAIL } });
 if (!found) {
-    await UserDbModel.create({ id: 'me', email: import.meta.env.VITE_TEACHER_EMAIL });
+    await UserDbModel.create({ id: v4(), email: import.meta.env.VITE_TEACHER_EMAIL });
 }
 
 export { UserDbModel, QuestionAnswerPairDbModel, MetricDbModel, AnswerDbModel };

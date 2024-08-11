@@ -2,7 +2,7 @@
     import { writable } from 'svelte/store';
     import { onMount } from 'svelte';
     import { Button, Input, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
-    import { doFetch, debounce, getHumanReadableDate, copyUrlToClipBoard } from '$lib/utils';
+    import { buildLink, doFetch, debounce, getHumanReadableDate, copyUrlToClipBoard } from '$lib/utils';
     import { type QuestionAnswerPairModel, type UserQuestionMetric } from '$lib/types';
     import Dropdown from '$lib/components/Dropdown.svelte';
 	import { FileCopyAltOutline } from 'flowbite-svelte-icons';
@@ -91,7 +91,7 @@
         <Button
             icon="FileCopyAltOutline"
             color="light"
-            on:click={() => copyUrlToClipBoard(`${window.location.origin}${window.location.pathname}?email=${email}&id=${id}`)}
+            on:click={() => copyUrlToClipBoard(buildLink(`${window.location.pathname}?email=${email}&id=${id}`))}
         >
             <FileCopyAltOutline/>link
         </Button>
