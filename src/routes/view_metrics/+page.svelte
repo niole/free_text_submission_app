@@ -1,61 +1,130 @@
 <script lang="ts">
-	import { Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
-    import { type QuestionAnswerAnalysis } from '$lib/types';
-    import { getHumanReadableDate } from '$lib/utils';
+    import { writable } from 'svelte/store';
+    import { onMount } from 'svelte';
+    import { Button, Input, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
+    import { doFetch, debounce, getHumanReadableDate, copyUrlToClipBoard } from '$lib/utils';
+    import { type QuestionAnswerPairModel, type UserQuestionMetric } from '$lib/types';
+    import Dropdown from '$lib/components/Dropdown.svelte';
+	import { FileCopyAltOutline } from 'flowbite-svelte-icons';
 
 	/** @type {import('./$types').PageData} */
-	export let data: { metrics: QuestionAnswerAnalysis[] };
+    export let data: {
+        questions: QuestionAnswerPairModel[],
+        question?: string,
+        email?: string,
+        id?: string,
+        metrics?: UserQuestionMetric[],
+        students: string[],
+    };
 
-    function getDurationMs(ms: number) {
-        return Math.round(ms/(1000*60));
+    let metrics: UserQuestionMetric[] = data?.metrics ?? [];
+    let email: string | undefined = data?.email;
+    let question: string | undefined = data?.question;
+    let id: string | undefined = data?.id;
+    let questions: QuestionAnswerPairModel[] = data.questions;
+    let emails: string[] = data.students;
+
+    const display_email = writable();
+    const display_question = writable();
+    const display_questions = writable();
+    const display_metrics = writable();
+    const display_emails = writable();
+
+    $: display_metrics.set(metrics);
+    $: display_question.set(question);
+    $: display_email.set(email);
+    $: display_questions.set(questions);
+    $: display_emails.set(emails);
+
+    const searchMetrics = (q: string = '') => {
+        doFetch(`/api/metrics/question/${id}/email/${email}?q=${q}`)
+            .then(x => {
+                metrics = x.data;
+            })
+            .catch(e => console.error(e));
     }
+
+    const debouncedSearchMetrics = debounce(searchMetrics);
+
+    function updateEmail(newEmail: string) {
+        email = newEmail;
+        searchMetrics();
+    }
+    function updateQuestion(newQuestionId: string) {
+        id = newQuestionId;
+        question = questions.find(q => q.id === newQuestionId)?.question ?? '';
+        searchMetrics();
+    }
+
+    onMount(() => {
+        doFetch('/api/question')
+        .then(x => {
+            questions = x.data;
+            if (!id && questions.length) {
+                updateQuestion(questions[0].id);
+            }
+        }).catch(e => console.error(e));
+        doFetch('/api/student')
+        .then(x => {
+            emails = x.data.map(u => u.email);
+            if (!email && emails.length) {
+                updateEmail(emails[0]);
+            }
+        }).catch(e => console.error(e));
+    });
 </script>
 
-<svelte:head>
-	<title>Metrics</title>
-</svelte:head>
-<h2 class="text-3xl">
-    Metrics
-</h2>
-
 <section>
+    <div class="flex">
+        <span class="flex-1">
+        metrics for <Dropdown
+            value={$display_email}
+            items={$display_emails.map(e => ({value: e, label: e}))}
+            onChange={updateEmail}
+        /> for <Dropdown
+                    onChange={updateQuestion}
+                    label="question"
+                    items={$display_questions.map(q => ({ value: q.id, label: q.question }))}
+                />
+        </span>
+
+        <Button
+            icon="FileCopyAltOutline"
+            color="light"
+            on:click={() => copyUrlToClipBoard(`${window.location.origin}${window.location.pathname}?email=${email}&id=${id}`)}
+        >
+            <FileCopyAltOutline/>link
+        </Button>
+    </div>
+    <pre>
+        {$display_question}
+    </pre>
+</section>
+
+<div>
+    <Input class="mb-5 w-200px" placeholder="search" on:keyup={e => debouncedSearchMetrics(e.target.value)} />
     <Table>
         <TableHead>
-            <TableHeadCell>Email</TableHeadCell>
-            <TableHeadCell>Question</TableHeadCell>
-            <TableHeadCell>User Answer</TableHeadCell>
-            <TableHeadCell>Correct</TableHeadCell>
-            <TableHeadCell>Page Views</TableHeadCell>
-            <TableHeadCell>Start Time</TableHeadCell>
-            <TableHeadCell>End Time</TableHeadCell>
-            <TableHeadCell>Total Time</TableHeadCell>
-            <TableHeadCell></TableHeadCell>
+            <TableHeadCell>metric name</TableHeadCell>
+            <TableHeadCell>created at</TableHeadCell>
+            <TableHeadCell>answer</TableHeadCell>
+            <TableHeadCell>correct</TableHeadCell>
         </TableHead>
         <TableBody>
-            {#each data.metrics as { pairId, question, answer, email, correct, totalVisits, totalTimeSpentMs, start, end }}
+            {#each $display_metrics as m}
                 <TableBodyRow>
-                    <TableBodyCell>{email}</TableBodyCell>
-                    <TableBodyCell tdClass="handle-overflow">{question}</TableBodyCell>
-                    <TableBodyCell tdClass="handle-overflow">{answer ?? ''}</TableBodyCell>
-                    <TableBodyCell>{correct}</TableBodyCell>
-                    <TableBodyCell>{totalVisits}</TableBodyCell>
-                    <TableBodyCell>{getHumanReadableDate(start)}</TableBodyCell>
-                    <TableBodyCell>{getHumanReadableDate(end)}</TableBodyCell>
-                    <TableBodyCell>{getDurationMs(totalTimeSpentMs)} minutes</TableBodyCell>
-                    <TableBodyCell><Button color="light" href={`/view_metrics/question/${pairId}/email/${email}`}>view all</Button></TableBodyCell>
+                    <TableBodyCell>{m.name}</TableBodyCell>
+                    <TableBodyCell>{getHumanReadableDate(m.createdAt)}</TableBodyCell>
+                    <TableBodyCell>{m.answer ? m.answer : ''}</TableBodyCell>
+                    <TableBodyCell>{m.correct === undefined ? '' : m.correct}</TableBodyCell>
                 </TableBodyRow>
             {/each}
         </TableBody>
     </Table>
-</section>
+</div>
 
 <style>
-	.handle-overflow {
-		max-width: 200px;
-		white-space: wrap;
-	}
-
-	h2 {
-		margin-bottom: 50px;
-	}
+    pre {
+        white-space: pre-wrap;
+    }
 </style>

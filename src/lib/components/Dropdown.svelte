@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onDestroy } from 'svelte';
     import { Button, Dropdown, DropdownItem } from 'flowbite-svelte';
     import { ChevronDownOutline } from 'flowbite-svelte-icons';
     import { writable } from 'svelte/store';
@@ -16,10 +17,17 @@
     if (label) {
         $: displaySelected.set(label);
     } else {
-        $: displaySelected.set(getSelectedLabel(value));
+        const v = getSelectedLabel(items, value);
+        $: displaySelected.set(v);
     }
 
-    function getSelectedLabel(value?: string) {
+    const unsubscribeItems = displayItems.subscribe(newItems => {
+        if (!label && newItems) {
+            displaySelected.set(getSelectedLabel(newItems, value));
+        }
+    });
+
+    function getSelectedLabel(items: { value: string, label: string }[], value?: string) {
         if (value === undefined) {
             if (items.length) {
                 return items[0].label;
@@ -32,12 +40,14 @@
 
     function localOnChange(value: string) {
         if (!label) {
-            displaySelected.set(getSelectedLabel(value));
+            displaySelected.set(getSelectedLabel(items, value));
         }
         if (onChange) {
             onChange(value);
         }
     }
+
+    onDestroy(unsubscribeItems);
 </script>
 
 <Button color="blue">{$displaySelected}<ChevronDownOutline class="w-6 h-6 ms-2 text-white dark:text-white" /></Button>

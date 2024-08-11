@@ -26,3 +26,8 @@ export type QuestionAnswerPairModel = {
     answer: string,
     link: string,
 };
+
+export type UserModel = {
+    id?: string,
+    email: string,
+};

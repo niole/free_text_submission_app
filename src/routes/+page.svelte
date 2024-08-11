@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
 	import { FileCopyAltOutline } from 'flowbite-svelte-icons';
+	import { copyUrlToClipBoard } from '$lib/utils';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
-
-	function copyUrlToClipBoard(q) {
-		navigator.clipboard.writeText(q.link);
-	}
 </script>
 
 <svelte:head>
@@ -36,7 +33,7 @@
 				<TableBodyCell tdClass="handle-overflow">{q.question}</TableBodyCell>
 				<TableBodyCell tdClass="handle-overflow">{q.answer}</TableBodyCell>
 				<TableBodyCell>
-					<Button icon="FileCopyAltOutline" color="light" on:click={() => copyUrlToClipBoard(q)}><FileCopyAltOutline/>link</Button>
+					<Button icon="FileCopyAltOutline" color="light" on:click={() => copyUrlToClipBoard(q.link)}><FileCopyAltOutline/>link</Button>
 				</TableBodyCell>
 				<TableBodyCell>
 					<Button color="light" href={`/create?pairId=${q.id}`}>edit</Button>
