@@ -34,6 +34,9 @@ export function listQuestionAnswerPairs(ownerId?: string, query?: string): Promi
         where.question = {
             [sequelize.Op.like]: `%${query}%`,
         };
+        where.title = {
+            [sequelize.Op.like]: `%${query}%`,
+        };
     }
     return QuestionAnswerPairDbModel.findAll({ where }).then(x => x.map(y => y.toJSON()));
 }

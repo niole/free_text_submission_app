@@ -14,6 +14,7 @@ const UserDbModel = sequelize.define('User', {
 const QuestionAnswerPairDbModel = sequelize.define('QuestionAnswerPair', {
     id: { type: DataTypes.STRING, unique: true, primaryKey: true },
     ownerId: DataTypes.STRING,
+    title: DataTypes.STRING,
     question: DataTypes.STRING,
     answer: DataTypes.STRING,
     link: { type: DataTypes.STRING, unique: true },

@@ -11,11 +11,13 @@
 
     const displayItems = writable();
     const displaySelected = writable();
+    const displayLabel = writable();
 
     $: displayItems.set(items);
+    $: displayLabel.set(label);
 
     if (label) {
-        $: displaySelected.set(label);
+        $: displayLabel.set(label);
     } else {
         const v = getSelectedLabel(items, value);
         $: displaySelected.set(v);
@@ -50,7 +52,7 @@
     onDestroy(unsubscribeItems);
 </script>
 
-<Button color="blue">{$displaySelected}<ChevronDownOutline class="w-6 h-6 ms-2 text-white dark:text-white" /></Button>
+<Button color="blue">{$displayLabel}<ChevronDownOutline class="w-6 h-6 ms-2 text-white dark:text-white" /></Button>
 <Dropdown>
     {#each $displayItems as x}
         <DropdownItem on:click={() => localOnChange(x.value)}>

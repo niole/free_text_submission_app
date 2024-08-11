@@ -9,11 +9,12 @@
     import { onMount } from "svelte";
 
 	/** @type {import('./$types').PageData} */
-    export let data: { pair: { question: string, answer: string } | undefined };
+    export let data: { pair: { title: string, question: string, answer: string } | undefined };
 
     let question: string | undefined = data.pair?.question;
     let answer: string | undefined = data.pair?.answer;
     let pairId: string | undefined;
+    let title: string | undefined = data.pair?.title;
     
     onMount(() => {
         pairId = new URLSearchParams(window.location.search).get('pairId') || '';
@@ -22,7 +23,9 @@
     const display_q = writable();
     const display_a = writable();
     const display_pair_id = writable();
+    const display_title = writable();
 
+    $: display_title.set(title);
     $: display_pair_id.set(pairId);
     $: display_q.set(question);
     $: display_a.set(answer);
@@ -34,6 +37,15 @@
 <div>
     <form action="?/saveQuestionAnswerPair" method="POST">
         <input type="hidden" id="pairId" name="pairId" value={$display_pair_id} />
+        <div>
+            <Label for="title">Title</Label>
+            <Input
+                on:keyup={e => title = e.target.value}
+                id="title"
+                name="title"
+                value={$display_title ?? ''}
+            />
+        </div>
         <div>
             <Label for="question">Question</Label>
             <Textarea

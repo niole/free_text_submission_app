@@ -8,17 +8,17 @@
 </script>
 
 <svelte:head>
-	<title>View</title>
+	<title>Questions</title>
 	<meta name="description" content="View question answer pairs" />
 </svelte:head>
 
 <h2 class="text-3xl">
-	View
+	Questions
 </h2>
 
 {#if data.qs.length === 0}
-	<a href="/create">Create a question</a>
-{/if}
+	<Button color="blue" href="/create">Create a question</Button>
+{:else}
 <Table>
 	<TableHead>
 		<TableHeadCell>question</TableHeadCell>
@@ -65,6 +65,7 @@
 		{/each}
 	</TableBody>
 </Table>
+{/if}
 
 <style>
 	.handle-overflow {

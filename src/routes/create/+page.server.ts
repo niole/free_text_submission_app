@@ -12,6 +12,7 @@ export const actions = {
         const question = body.get('question')?.toString();
         const answer = body.get('answer')?.toString();
         const pairId = body.get('pairId')?.toString();
+        const title = body.get('title')?.toString();
 
         const teacher = await getTeacher();
         if (!teacher) {
@@ -22,11 +23,12 @@ export const actions = {
         if (question && answer) {
 
             if (pairId) {
-                await updateQuestionAnswerPair(pairId, { question, answer });
+                await updateQuestionAnswerPair(pairId, { title, question, answer });
             } else {
                 const id = v4();
                 await createQuestionAnswerPair({
                     id,
+                    title,
                     ownerId: teacherId,
                     question,
                     answer,

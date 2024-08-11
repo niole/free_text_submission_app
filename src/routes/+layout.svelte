@@ -8,7 +8,7 @@
 <div class="app">
 	<Navbar rounded color="form">
 		<NavUl>
-			<NavLi><a href="/">View</a></NavLi>
+			<NavLi><a href="/">Questions</a></NavLi>
 			<NavLi><a href="/create">Create</a></NavLi>
 			<NavLi><a href="/view_metrics">Metrics</a></NavLi>
 			<NavLi><a href={`${appDomain}/api/logout`}>Logout</a></NavLi>

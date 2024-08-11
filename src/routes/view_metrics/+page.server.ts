@@ -9,12 +9,11 @@ export async function load(event) {
     const search = event.url.searchParams;
     const email = search.get('email') ?? undefined;
     const id = search.get('id') ?? undefined;
-    let question;
+    let pair;
 
     if (id) {
         try {
-            const pair = await findQuestionAnswerPair(id);
-            question = pair?.question;
+            pair = await findQuestionAnswerPair(id);
         } catch (e) {
             console.error(`Failed to get question pairId ${id}`, e);
         }
@@ -25,9 +24,10 @@ export async function load(event) {
         const students = (await listStudents()).map(s => s.email);
         const questions = await listQuestionAnswerPairs();
         return {
+            questionTitle: pair?.title,
             students,
             questions,
-            question,
+            question: pair?.question,
             email,
             id,
             metrics

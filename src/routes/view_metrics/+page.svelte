@@ -10,6 +10,7 @@
 	/** @type {import('./$types').PageData} */
     export let data: {
         questions: QuestionAnswerPairModel[],
+        questionTitle?: string,
         question?: string,
         email?: string,
         id?: string,
@@ -20,16 +21,19 @@
     let metrics: UserQuestionMetric[] = data?.metrics ?? [];
     let email: string | undefined = data?.email;
     let question: string | undefined = data?.question;
+    let questionTitle: string | undefined = data?.questionTitle;
     let id: string | undefined = data?.id;
     let questions: QuestionAnswerPairModel[] = data.questions;
     let emails: string[] = data.students;
 
+    const display_question_title = writable();
     const display_email = writable();
     const display_question = writable();
     const display_questions = writable();
     const display_metrics = writable();
     const display_emails = writable();
 
+    $: display_question_title.set(questionTitle);
     $: display_metrics.set(metrics);
     $: display_question.set(question);
     $: display_email.set(email);
@@ -50,9 +54,17 @@
         email = newEmail;
         searchMetrics();
     }
-    function updateQuestion(newQuestionId: string) {
+    function updateQuestion(newQuestionId: string, title?: string, newQuestion?: string) {
         id = newQuestionId;
-        question = questions.find(q => q.id === newQuestionId)?.question ?? '';
+        if (!title || !newQuestion) {
+            const foundQuestion = questions.find(q => q.id === newQuestionId);
+            questionTitle = foundQuestion?.title;
+            question = foundQuestion?.question;
+        } else {
+            questionTitle = title;
+            questionTitle = title;
+            question = newQuestion;
+        }
         searchMetrics();
     }
 
@@ -61,7 +73,8 @@
         .then(x => {
             questions = x.data;
             if (!id && questions.length) {
-                updateQuestion(questions[0].id);
+                const q = questions[0];
+                updateQuestion(q.id!, q.title, q.question);
             }
         }).catch(e => console.error(e));
         doFetch('/api/student')
@@ -72,19 +85,20 @@
             }
         }).catch(e => console.error(e));
     });
+
 </script>
 
 <section>
     <div class="flex">
         <span class="flex-1">
         metrics for <Dropdown
-            value={$display_email}
+            label={$display_email}
             items={$display_emails.map(e => ({value: e, label: e}))}
             onChange={updateEmail}
         /> for <Dropdown
                     onChange={updateQuestion}
-                    label="question"
-                    items={$display_questions.map(q => ({ value: q.id, label: q.question }))}
+                    label={$display_question_title}
+                    items={$display_questions.map(q => ({ value: q.id, label: q.title }))}
                 />
         </span>
 

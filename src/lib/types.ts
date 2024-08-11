@@ -21,6 +21,7 @@ export type QuestionAnswerAnalysis = {
 
 export type QuestionAnswerPairModel = {
     id?: string,
+    title: string,
     ownerId: string,
     question: string,
     answer: string,
