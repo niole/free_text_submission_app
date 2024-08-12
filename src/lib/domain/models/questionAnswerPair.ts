@@ -35,12 +35,14 @@ export async function listQuestionAnswerPairs(
     }
 
     if (query) {
-        where.question = {
-            [sequelize.Op.like]: `%${query}%`,
-        };
-        where.title = {
-            [sequelize.Op.like]: `%${query}%`,
-        };
+        where[sequelize.Op.or] = {
+            question: {
+                [sequelize.Op.like]: `%${query}%`,
+            },
+            title: {
+                [sequelize.Op.like]: `%${query}%`,
+            }
+        }
     }
     const count = await QuestionAnswerPairDbModel.count({ where });
 

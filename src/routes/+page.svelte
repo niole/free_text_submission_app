@@ -1,10 +1,18 @@
 <script lang="ts">
-	import { Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
+	import { Input, Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
 	import { FileCopyAltOutline } from 'flowbite-svelte-icons';
-	import { buildLink, copyUrlToClipBoard } from '$lib/utils';
+	import { doFetch, debounce, buildLink, copyUrlToClipBoard } from '$lib/utils';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
+
+	const debouncedSearch = debounce((v: string) => {
+		doFetch(`/api/question?q=${v}`)
+		.then(x => {
+			data = { qs: x };
+		})
+		.catch(e => console.error(e));
+	});
 </script>
 
 <svelte:head>
@@ -17,11 +25,14 @@
 </h2>
 
 {#if data.qs.data.length === 0}
-	<Button color="blue" href="/create">Create a question</Button>
-{:else}
+	<Button color="blue" class="mb-5" href="/create">Create a question</Button>
+{/if}
+<Input class="mb-5 w-200px" placeholder="search" on:keyup={e => debouncedSearch(e.target.value)} />
+showing {data.qs.data.length} of {data.qs.pagination.totalItems} questions
 <Table>
 	<TableHead>
-		<TableHeadCell>question</TableHeadCell>
+		<TableHeadCell>title</TableHeadCell>
+		<TableHeadCell>content</TableHeadCell>
 		<TableHeadCell>answer</TableHeadCell>
 		<TableHeadCell></TableHeadCell>
 		<TableHeadCell></TableHeadCell>
@@ -30,6 +41,7 @@
 	<TableBody tableBodyClass="divide-y handle-overflow">
 		{#each data.qs.data as q}
 			<TableBodyRow>
+				<TableBodyCell tdClass="handle-overflow">{q.title}</TableBodyCell>
 				<TableBodyCell tdClass="handle-overflow">{q.question}</TableBodyCell>
 				<TableBodyCell tdClass="handle-overflow">{q.answer}</TableBodyCell>
 				<TableBodyCell>
@@ -65,7 +77,6 @@
 		{/each}
 	</TableBody>
 </Table>
-{/if}
 
 <style>
 	.handle-overflow {
