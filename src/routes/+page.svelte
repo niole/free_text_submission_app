@@ -60,7 +60,7 @@ showing {data.qs.data.length} of {data.qs.pagination.totalItems} questions
 					<Button
 						color="red"
 						on:click={() => {
-							const shouldDelete = confirm("Are you sure?");
+							const shouldDelete = confirm(`Are you sure that you want to delete ${q.title}?`);
 							if (shouldDelete) {
 								fetch(`/api/question/${q.id}`, { method: 'DELETE'})
 								.then(() => {

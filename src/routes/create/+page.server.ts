@@ -14,6 +14,10 @@ export const actions = {
         const pairId = body.get('pairId')?.toString();
         const title = body.get('title')?.toString();
 
+        if (!title || !question || !answer) {
+            return error(400, 'Please include title, question, and answer');
+        }
+
         const teacher = await getTeacher();
         if (!teacher) {
             return error(500, 'Teacher not found');
