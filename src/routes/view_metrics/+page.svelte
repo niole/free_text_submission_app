@@ -68,8 +68,8 @@
         searchMetrics();
     }
 
-    onMount(() => {
-        doFetch('/api/question')
+    function searchQuestions(q: string = '') {
+        doFetch(`/api/question?q=${q}`)
         .then(x => {
             questions = x;
             // if no question selected, select the first one
@@ -78,6 +78,10 @@
                 updateQuestion(q.id!, q.title, q.question);
             }
         }).catch(e => console.error(e));
+    }
+
+    onMount(() => {
+        searchQuestions();
         doFetch('/api/student')
         .then(x => {
             emails = x.data.map(u => u.email);
@@ -97,8 +101,10 @@
             items={$display_emails.map(e => ({value: e, label: e}))}
             onChange={updateEmail}
         /> for <Dropdown
+                    isTypeahead={true}
+                    onSearch={searchQuestions}
                     onChange={updateQuestion}
-                    label={$display_question_title}
+                    label="search for a question"
                     items={questions.data.map(q => ({ value: q.id, label: q.title }))}
                 />
         </span>
@@ -111,13 +117,18 @@
             <FileCopyAltOutline/>link
         </Button>
     </div>
+    <h3>{$display_question_title}</h3>
     <pre>
         {$display_question}
     </pre>
 </section>
 
 <div>
-    <Input class="mb-5 w-200px" placeholder="search" on:keyup={e => debouncedSearchMetrics(e.target.value)} />
+    <Input
+        class="mb-5 w-200px"
+        placeholder="search metrics"
+        on:keyup={e => debouncedSearchMetrics(e.target.value)}
+    />
     <Table>
         <TableHead>
             <TableHeadCell>metric name</TableHeadCell>
