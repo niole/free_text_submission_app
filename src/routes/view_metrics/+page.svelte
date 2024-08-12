@@ -93,6 +93,11 @@
 
 </script>
 
+<svelte:head>
+	<title>Metrics</title>
+	<meta name="description" content="View student metrics" />
+</svelte:head>
+
 <section>
     <div class="flex">
         <span class="flex-1">
