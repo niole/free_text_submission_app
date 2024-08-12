@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 import * as sequelize from 'sequelize';
-import { type QuestionAnswerPairModel } from '$lib/types';
+import { defaultPageOpts, type PaginationPage, type PaginatedResponse, type QuestionAnswerPairModel } from '$lib/types';
 import { QuestionAnswerPairDbModel } from './db';
 
 export function createQuestionAnswerPair(pair: QuestionAnswerPairModel) {
@@ -24,7 +24,11 @@ export async function findQuestionAnswerPair(id: string): Promise<QuestionAnswer
     return QuestionAnswerPairDbModel.findOne({ where: { id } }).then(x => x?.toJSON());
 }
 
-export function listQuestionAnswerPairs(ownerId?: string, query?: string): Promise<QuestionAnswerPairModel[]> {
+export async function listQuestionAnswerPairs(
+    ownerId?: string,
+    query?: string,
+    pageOpts: PaginationPage = defaultPageOpts
+): Promise<PaginatedResponse<QuestionAnswerPairModel>> {
     const where = {};
     if (ownerId) {
         where.ownerId = ownerId;
@@ -38,7 +42,28 @@ export function listQuestionAnswerPairs(ownerId?: string, query?: string): Promi
             [sequelize.Op.like]: `%${query}%`,
         };
     }
-    return QuestionAnswerPairDbModel.findAll({ where }).then(x => x.map(y => y.toJSON()));
+    const count = await QuestionAnswerPairDbModel.count({ where });
+
+    const maxPage = Math.ceil(count / pageOpts.pageSize);
+    const page = Math.min(Math.max(pageOpts.page, 1), maxPage);
+    const offset = (page-1) * pageOpts.pageSize;
+    const limit = pageOpts.pageSize;
+
+    const data = await QuestionAnswerPairDbModel.findAll({
+        where,
+        offset,
+        limit,
+    }).then(x => x.map(y => y.toJSON()));
+    return {
+        pagination: {
+            page: {
+                page,
+                pageSize: pageOpts.pageSize,
+            },
+            totalItems: count,
+        },
+        data,
+    };
 }
 
 export function deleteQuestionAnswerPair(id: string): Promise<number> {

@@ -1,4 +1,4 @@
-import { json } from '@sveltejs/kit'
+import { error, json } from '@sveltejs/kit'
 import { listQuestionAnswerPairs } from '$lib/domain/models/questionAnswerPair';
 import { handleTeacherRoute } from '$lib/server/utils';
 
@@ -9,9 +9,9 @@ export async function GET(event) {
     try {
         const data = await listQuestionAnswerPairs(undefined, query);
 
-        return json({ success: true, data });
+        return json(data);
     } catch (e) {
         console.error(`Failed to get question answer pairs`, e);
-        return json({ success: false, data: [] });
+        return error(500, 'Failed to get question answer pairs');
     }
 }

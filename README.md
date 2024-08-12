@@ -8,6 +8,7 @@ VITE_TEACHER_EMAIL=...
 
 # TODO
 
+- create paginated table and typeahead
 - verify that secrets stay on BE
 - search by email and question in metrics page
 - export metrics summary to csv

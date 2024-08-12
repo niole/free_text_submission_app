@@ -17,7 +17,7 @@ export async function load(event) {
         } catch (e) {
             console.error(`Failed to get question pairId ${id}`, e);
         }
-        }
+    }
 
     try {
         const metrics = email && id ? await getMetricsByEmail(email, id) : undefined;

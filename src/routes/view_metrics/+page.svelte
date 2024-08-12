@@ -3,13 +3,13 @@
     import { onMount } from 'svelte';
     import { Button, Input, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
     import { buildLink, doFetch, debounce, getHumanReadableDate, copyUrlToClipBoard } from '$lib/utils';
-    import { type QuestionAnswerPairModel, type UserQuestionMetric } from '$lib/types';
+    import { type PaginatedResponse, type QuestionAnswerPairModel, type UserQuestionMetric } from '$lib/types';
     import Dropdown from '$lib/components/Dropdown.svelte';
 	import { FileCopyAltOutline } from 'flowbite-svelte-icons';
 
 	/** @type {import('./$types').PageData} */
     export let data: {
-        questions: QuestionAnswerPairModel[],
+        questions: PaginatedResponse<QuestionAnswerPairModel>,
         questionTitle?: string,
         question?: string,
         email?: string,
@@ -23,7 +23,7 @@
     let question: string | undefined = data?.question;
     let questionTitle: string | undefined = data?.questionTitle;
     let id: string | undefined = data?.id;
-    let questions: QuestionAnswerPairModel[] = data.questions;
+    let questions: PaginatedResponse<QuestionAnswerPairModel> = data.questions;
     let emails: string[] = data.students;
 
     const display_question_title = writable();
@@ -57,7 +57,7 @@
     function updateQuestion(newQuestionId: string, title?: string, newQuestion?: string) {
         id = newQuestionId;
         if (!title || !newQuestion) {
-            const foundQuestion = questions.find(q => q.id === newQuestionId);
+            const foundQuestion = questions.data.find(q => q.id === newQuestionId);
             questionTitle = foundQuestion?.title;
             question = foundQuestion?.question;
         } else {
@@ -71,9 +71,10 @@
     onMount(() => {
         doFetch('/api/question')
         .then(x => {
-            questions = x.data;
-            if (!id && questions.length) {
-                const q = questions[0];
+            questions = x;
+            // if no question selected, select the first one
+            if (!id && questions.data.length) {
+                const q = questions.data[0];
                 updateQuestion(q.id!, q.title, q.question);
             }
         }).catch(e => console.error(e));
@@ -98,7 +99,7 @@
         /> for <Dropdown
                     onChange={updateQuestion}
                     label={$display_question_title}
-                    items={$display_questions.map(q => ({ value: q.id, label: q.title }))}
+                    items={questions.data.map(q => ({ value: q.id, label: q.title }))}
                 />
         </span>
 

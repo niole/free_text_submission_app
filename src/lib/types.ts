@@ -1,3 +1,5 @@
+import type { integrations_v1alpha } from "googleapis";
+
 export type UserQuestionMetric = {
     name: string,
     createdAt: Date,
@@ -31,3 +33,23 @@ export type UserModel = {
     id?: string,
     email: string,
 };
+
+// 1 indexed
+export type PaginationOpts = {
+    totalItems: number,
+    page: PaginationPage,
+};
+
+export type PaginationPage = {
+    page: number,
+    pageSize: number,
+};
+export const defaultPageOpts: PaginationPage = {
+    page: 1,
+    pageSize: 10,
+};
+
+export type PaginatedResponse<D> = {
+    pagination: PaginationOpts,
+    data: D[],
+}

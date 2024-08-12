@@ -16,7 +16,7 @@
 	Questions
 </h2>
 
-{#if data.qs.length === 0}
+{#if data.qs.data.length === 0}
 	<Button color="blue" href="/create">Create a question</Button>
 {:else}
 <Table>
@@ -28,7 +28,7 @@
 		<TableHeadCell></TableHeadCell>
 	</TableHead>
 	<TableBody tableBodyClass="divide-y handle-overflow">
-		{#each data.qs as q}
+		{#each data.qs.data as q}
 			<TableBodyRow>
 				<TableBodyCell tdClass="handle-overflow">{q.question}</TableBodyCell>
 				<TableBodyCell tdClass="handle-overflow">{q.answer}</TableBodyCell>
