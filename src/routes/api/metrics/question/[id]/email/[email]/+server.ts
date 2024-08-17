@@ -9,12 +9,16 @@ import { handleTeacherRoute } from '$lib/server/utils';
  * @returns 
  */
 export async function GET(event) {
+    console.debug('listing metrics');
     await handleTeacherRoute(event);
     const { id, email } = event.params;
     const search = event.url.searchParams
     const sortKey = search.get('sortKey') ?? undefined;
     const sortDir = search.get('sortDir') ?? undefined;
     const query = search.get('q') ?? undefined;
+
+    console.debug('listing metrics for question ', id, ' for user ', email);
+
     try {
         const metrics = await getMetricsByEmail(
             email,

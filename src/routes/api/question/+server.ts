@@ -3,6 +3,7 @@ import { listQuestionAnswerPairs } from '$lib/server/models/questionAnswerPair';
 import { handleTeacherRoute } from '$lib/server/utils';
 
 export async function GET(event) {
+    console.debug('listing questions');
     await handleTeacherRoute(event);
     const search = event.url.searchParams
     const query = search.get('q') ?? undefined;

@@ -19,10 +19,13 @@ export function debounce(f, sleepMs = 200) {
     }
 }
 
-export async function doFetch(url: string, opts = undefined) {
+export async function doFetch(url: string, opts: any = undefined, isFormAction: boolean = false) {
     return fetch(url, opts)
     .then(x => {
         if (x.ok) {
+            if (isFormAction) {
+                return x.text();
+            }
             return x.json();
         } else {
             return x.error().text().then(x => {

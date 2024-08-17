@@ -3,6 +3,7 @@ import { handleTeacherRoute } from '$lib/server/utils.js';
 import { listStudents } from '$lib/server/models/user';
 
 export async function GET(event) {
+    console.debug('list students');
     try {
         await handleTeacherRoute(event);
         return json({ success: true, data: await listStudents() });

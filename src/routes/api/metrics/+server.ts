@@ -3,6 +3,7 @@ import { getAnalysis } from '$lib/server/models/metric';
 import { handleTeacherRoute } from '$lib/server/utils';
 
 export async function GET(event) {
+    console.debug('listing all metrics');
     await handleTeacherRoute(event);
     const search = event.url.searchParams
     const sortKey = search.get('sortKey') ?? undefined;

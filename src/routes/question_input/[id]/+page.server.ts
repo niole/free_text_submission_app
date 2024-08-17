@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { type RequestEvent } from '@sveltejs/kit';
-import { error, redirect } from '@sveltejs/kit';
+import { error, json } from '@sveltejs/kit';
 import { findQuestionAnswerPair } from '$lib/server/models/questionAnswerPair';
 import { type QuestionAnswerPairModel } from '$lib/types';
 import { createAnswerQuestionMetric, createMetric, createViewQuestionMetric } from '$lib/server/models/metric';
@@ -91,12 +91,12 @@ export const actions = {
                 createMetric(createAnswerQuestionMetric(email, pair.id, userAnswer.id));
 
                 if (passed !== null && passed) {
-                    return redirect(302, '/correct');
+                    return { correct: true };
                 } else {
                     if (passed === null) {
                         console.error(`Chat assistant gave inscrutible answer: ${JSON.stringify(completion)}`);
                     }
-                    error(400, 'Incorrect answer');
+                    return { correct: false };
                 }
 
             }

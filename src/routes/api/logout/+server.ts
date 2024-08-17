@@ -1,4 +1,6 @@
 export async function GET() {
+    console.debug('logging user out');
+
     return new Response('', {
         headers: new Headers({
             Location: '/loggedout',
