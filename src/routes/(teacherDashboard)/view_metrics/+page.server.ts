@@ -21,7 +21,7 @@ export async function load(event) {
 
     try {
         const metrics = email && id ? await getMetricsByEmail(email, id) : undefined;
-        const students = (await listStudents()).map(s => s.email);
+        const students = (await listStudents(10)).map(s => s.email);
         const questions = await listQuestionAnswerPairs();
         return {
             questionTitle: pair?.title,

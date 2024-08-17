@@ -80,15 +80,19 @@
         }).catch(e => console.error(e));
     }
 
-    onMount(() => {
-        searchQuestions();
-        doFetch('/api/student')
+    function searchEmails(q: string = '') {
+        doFetch(`/api/student?q=${q}`)
         .then(x => {
             emails = x.data.map(u => u.email);
             if (!email && emails.length) {
                 updateEmail(emails[0]);
             }
         }).catch(e => console.error(e));
+    }
+
+    onMount(() => {
+        searchQuestions();
+        searchEmails();
     });
 
 </script>
@@ -99,13 +103,15 @@
 </svelte:head>
 
 <section>
-    <div class="flex">
+    <div class="flex mb-5">
         <span class="flex-1">
-        metrics for <Dropdown
-            label={$display_email}
-            items={$display_emails.map(e => ({value: e, label: e}))}
+        <Dropdown
+            isTypeahead={true}
+            onSearch={searchEmails}
+            label="search for a student"
+            items={emails.map(e => ({value: e, label: e}))}
             onChange={updateEmail}
-        /> for <Dropdown
+        /> <Dropdown
                     isTypeahead={true}
                     onSearch={searchQuestions}
                     onChange={updateQuestion}
@@ -122,36 +128,49 @@
             <FileCopyAltOutline/>link
         </Button>
     </div>
-    <h3>{$display_question_title}</h3>
-    <pre>
-        {$display_question}
-    </pre>
+
+    {#if $display_email}
+        <div>
+            metrics for {$display_email}
+        </div>
+    {/if}
+
 </section>
 
 <div>
-    <Input
-        class="mb-5 w-200px"
-        placeholder="search metrics"
-        on:keyup={e => debouncedSearchMetrics(e.target.value)}
-    />
-    <Table>
-        <TableHead>
-            <TableHeadCell>metric name</TableHeadCell>
-            <TableHeadCell>created at</TableHeadCell>
-            <TableHeadCell>answer</TableHeadCell>
-            <TableHeadCell>correct</TableHeadCell>
-        </TableHead>
-        <TableBody>
-            {#each $display_metrics as m}
-                <TableBodyRow>
-                    <TableBodyCell>{m.name}</TableBodyCell>
-                    <TableBodyCell>{getHumanReadableDate(m.createdAt)}</TableBodyCell>
-                    <TableBodyCell>{m.answer ? m.answer : ''}</TableBodyCell>
-                    <TableBodyCell>{m.correct === undefined ? '' : m.correct}</TableBodyCell>
-                </TableBodyRow>
-            {/each}
-        </TableBody>
-    </Table>
+    {#if $display_question_title && emails.length}
+        <h3>{$display_question_title}</h3>
+        <pre>
+            {$display_question}
+        </pre>
+        <Input
+            class="mb-5 w-200px"
+            placeholder="search metrics"
+            on:keyup={e => debouncedSearchMetrics(e.target.value)}
+        />
+        <Table>
+            <TableHead>
+                <TableHeadCell>metric name</TableHeadCell>
+                <TableHeadCell>created at</TableHeadCell>
+                <TableHeadCell>answer</TableHeadCell>
+                <TableHeadCell>correct</TableHeadCell>
+            </TableHead>
+            <TableBody>
+                {#each $display_metrics as m}
+                    <TableBodyRow>
+                        <TableBodyCell>{m.name}</TableBodyCell>
+                        <TableBodyCell>{getHumanReadableDate(m.createdAt)}</TableBodyCell>
+                        <TableBodyCell>{m.answer ? m.answer : ''}</TableBodyCell>
+                        <TableBodyCell>{m.correct === undefined ? '' : m.correct}</TableBodyCell>
+                    </TableBodyRow>
+                {/each}
+            </TableBody>
+        </Table>
+    {:else}
+    <div class="p-5 text-center">
+        no metrics to show
+    </div>
+    {/if}
 </div>
 
 <style>
