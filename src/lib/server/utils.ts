@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 export const oauth2Client = new google.auth.OAuth2(
     import.meta.env.VITE_GOOGLE_CLIENT_ID,
     import.meta.env.VITE_GOOGLE_CLIENT_SECRET,
-  'http://localhost:5173/oathcallback'
+    `${import.meta.env.VITE_APP_DOMAIN}/oathcallback`,
 );
 
 export class UnauthorizedError extends Error {}
@@ -36,7 +36,8 @@ export async function getViewingUserEmail(event): Promise<string> {
 
 export async function handleTeacherRoute(event): Promise<string> {
     const sessionEmail = await getViewingUserEmail(event);
-    if (sessionEmail !== import.meta.env.VITE_TEACHER_EMAIL) {
+    const allowedEmails = [import.meta.env.VITE_ADMIN_EMAIL, import.meta.env.VITE_TEACHER_EMAIL];
+    if (!allowedEmails.includes(sessionEmail)) {
         throw new UnauthorizedError('Unauthorized');
     }
     return sessionEmail;

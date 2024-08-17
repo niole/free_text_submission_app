@@ -20,9 +20,12 @@
 	<meta name="description" content="View question answer pairs" />
 </svelte:head>
 
-<h2 class="text-3xl">
-	Questions
-</h2>
+<div class="page-header">
+	<h2 class="text-3xl">
+		Questions
+	</h2>
+	<h3>view, manage, and get links to questions</h3>
+</div>
 
 {#if data.qs.data.length === 0}
 	<Button color="blue" class="mb-5" href="/create">Create a question</Button>

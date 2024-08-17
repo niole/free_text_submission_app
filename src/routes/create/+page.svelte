@@ -30,9 +30,15 @@
     $: display_q.set(question);
     $: display_a.set(answer);
 </script>
-<h2 class="text-3xl">
-	Create
-</h2>
+
+<div class="page-header">
+    <h2 class="text-3xl">
+        Create
+    </h2>
+    <h3>
+        Create or edit a question
+    </h3>
+</div>
 
 <div>
     <form action="?/saveQuestionAnswerPair" method="POST">
