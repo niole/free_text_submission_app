@@ -28,7 +28,9 @@
 </div>
 
 {#if data.qs.data.length === 0}
+<div class="text-center mb-5">
 	<Button color="blue" class="mb-5" href="/create">Create a question</Button>
+</div>
 {/if}
 <Input class="mb-5 w-200px" placeholder="search" on:keyup={e => debouncedSearch(e.target.value)} />
 showing {data.qs.data.length} of {data.qs.pagination.totalItems} questions
@@ -42,6 +44,11 @@ showing {data.qs.data.length} of {data.qs.pagination.totalItems} questions
 		<TableHeadCell></TableHeadCell>
 	</TableHead>
 	<TableBody tableBodyClass="divide-y handle-overflow">
+		{#if data.qs.data.length == 0}
+			<TableBodyRow>
+				<TableBodyCell colspan="6" class="text-center">no questions to show</TableBodyCell>
+			</TableBodyRow>
+		{/if}
 		{#each data.qs.data as q}
 			<TableBodyRow>
 				<TableBodyCell tdClass="handle-overflow">{q.title}</TableBodyCell>

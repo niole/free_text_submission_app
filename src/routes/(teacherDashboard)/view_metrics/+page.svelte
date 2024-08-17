@@ -156,6 +156,11 @@
                 <TableHeadCell>correct</TableHeadCell>
             </TableHead>
             <TableBody>
+                {#if metrics.length == 0}
+                    <TableBodyRow>
+                        <TableBodyCell colspan="4" class="text-center">no metrics to show</TableBodyCell>
+                    </TableBodyRow>
+                {/if}
                 {#each $display_metrics as m}
                     <TableBodyRow>
                         <TableBodyCell>{m.name}</TableBodyCell>
