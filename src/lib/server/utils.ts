@@ -1,10 +1,16 @@
 import {google} from 'googleapis';
 import cookie from 'cookie';
 import { jwtDecode } from "jwt-decode";
+import {
+    GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET,
+    ADMIN_EMAIL,
+    TEACHER_EMAIL,
+} from '$env/static/private';
 
 export const oauth2Client = new google.auth.OAuth2(
-    import.meta.env.VITE_GOOGLE_CLIENT_ID,
-    import.meta.env.VITE_GOOGLE_CLIENT_SECRET,
+    GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET,
     `${import.meta.env.VITE_APP_DOMAIN}/oathcallback`,
 );
 
@@ -36,7 +42,7 @@ export async function getViewingUserEmail(event): Promise<string> {
 
 export async function handleTeacherRoute(event): Promise<string> {
     const sessionEmail = await getViewingUserEmail(event);
-    const allowedEmails = [import.meta.env.VITE_ADMIN_EMAIL, import.meta.env.VITE_TEACHER_EMAIL];
+    const allowedEmails = [ADMIN_EMAIL, TEACHER_EMAIL];
     if (!allowedEmails.includes(sessionEmail)) {
         throw new UnauthorizedError('Unauthorized');
     }

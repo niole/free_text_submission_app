@@ -1,13 +1,14 @@
 import OpenAI from "openai";
 import { type RequestEvent } from '@sveltejs/kit';
 import { error, redirect } from '@sveltejs/kit';
-import { findQuestionAnswerPair } from '$lib/domain/models/questionAnswerPair';
+import { findQuestionAnswerPair } from '$lib/server/models/questionAnswerPair';
 import { type QuestionAnswerPairModel } from '$lib/types';
-import { createAnswerQuestionMetric, createMetric, createViewQuestionMetric } from '$lib/domain/models/metric';
-import { createAnswer } from '$lib/domain/models/answer';
+import { createAnswerQuestionMetric, createMetric, createViewQuestionMetric } from '$lib/server/models/metric';
+import { createAnswer } from '$lib/server/models/answer';
 import { getViewingUserEmail } from '$lib/server/utils';
+import { OPENAI_KEY } from '$env/static/private';
 
-const openai = new OpenAI({ apiKey: import.meta.env.VITE_OPENAI_KEY });
+const openai = new OpenAI({ apiKey: OPENAI_KEY });
 
 const DEFAULT_CHAT_PROMPT = `
 you are a math problem grader. Given a problem and an answer, please grade the answer that the student subsequently sends to you.

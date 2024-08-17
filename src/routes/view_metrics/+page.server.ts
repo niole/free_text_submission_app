@@ -1,8 +1,8 @@
 import { error } from '@sveltejs/kit';
-import { getMetricsByEmail } from '$lib/domain/models/metric';
-import { listQuestionAnswerPairs, findQuestionAnswerPair } from '$lib/domain/models/questionAnswerPair';
+import { getMetricsByEmail } from '$lib/server/models/metric';
+import { listQuestionAnswerPairs, findQuestionAnswerPair } from '$lib/server/models/questionAnswerPair';
 import { handleTeacherRoute } from '$lib/server/utils';
-import { listStudents } from '$lib/domain/models/user';
+import { listStudents } from '$lib/server/models/user';
 
 export async function load(event) {
     await handleTeacherRoute(event)

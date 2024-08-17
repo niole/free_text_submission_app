@@ -1,6 +1,6 @@
 import { json, error } from '@sveltejs/kit'
 import { handleTeacherRoute } from '$lib/server/utils.js';
-import { listStudents } from '$lib/domain/models/user';
+import { listStudents } from '$lib/server/models/user';
 
 export async function GET(event) {
     try {

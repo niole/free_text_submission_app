@@ -1,6 +1,7 @@
 import * as sequelize from 'sequelize';
 import * as db from './db';
 import { type UserModel } from '$lib/types';
+import { TEACHER_EMAIL } from '$env/static/private';
 
 export async function listStudents(): Promise<UserModel[]> {
     const metrics = await db.MetricDbModel.findAll({
@@ -14,6 +15,6 @@ export async function listStudents(): Promise<UserModel[]> {
 }
 
 export async function getTeacher(): Promise<UserModel | undefined> {
-    const user = await db.UserDbModel.findOne({ where: { email: import.meta.env.VITE_TEACHER_EMAIL } });
+    const user = await db.UserDbModel.findOne({ where: { email: TEACHER_EMAIL } });
     return user?.toJSON();
 }

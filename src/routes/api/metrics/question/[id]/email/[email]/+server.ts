@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit'
-import { getMetricsByEmail } from '$lib/domain/models/metric';
+import { getMetricsByEmail } from '$lib/server/models/metric';
 import { handleTeacherRoute } from '$lib/server/utils';
 
 /**

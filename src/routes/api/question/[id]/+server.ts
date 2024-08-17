@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit'
-import { deleteQuestionAnswerPair } from '$lib/domain/models/questionAnswerPair';
+import { deleteQuestionAnswerPair } from '$lib/server/models/questionAnswerPair';
 import { handleTeacherRoute } from '$lib/server/utils';
 
 export async function DELETE(event) {

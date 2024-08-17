@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit'
-import { getAnalysis } from '$lib/domain/models/metric';
+import { getAnalysis } from '$lib/server/models/metric';
 import { handleTeacherRoute } from '$lib/server/utils';
 
 export async function GET(event) {

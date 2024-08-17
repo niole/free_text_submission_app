@@ -1,5 +1,5 @@
 import { error, json } from '@sveltejs/kit'
-import { listQuestionAnswerPairs } from '$lib/domain/models/questionAnswerPair';
+import { listQuestionAnswerPairs } from '$lib/server/models/questionAnswerPair';
 import { handleTeacherRoute } from '$lib/server/utils';
 
 export async function GET(event) {

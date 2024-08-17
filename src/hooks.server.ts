@@ -1,5 +1,6 @@
 import {redirect, error as errorResponse} from '@sveltejs/kit';
 import { getVerifiedUser, oauth2Client, UnauthenticatedError, UnauthorizedError } from '$lib/server/utils';
+import { COOKIE_REFRESH_SECONDS } from '$env/static/private';
 
 const scope = [
   'https://www.googleapis.com/auth/userinfo.email',
@@ -18,7 +19,7 @@ export async function handle({ event, resolve }) {
         const code = event.url.searchParams.get('code');
         const {tokens} = await oauth2Client.getToken(code)
    
-        const refreshSeconds = import.meta.env.VITE_COOKIE_REFRESH_SECONDS;
+        const refreshSeconds = COOKIE_REFRESH_SECONDS;
         return new Response('', {
             headers: new Headers({
                 Location: '/',

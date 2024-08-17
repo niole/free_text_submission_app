@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 import { error, type RequestEvent } from '@sveltejs/kit';
-import {findQuestionAnswerPair, createQuestionAnswerPair,  updateQuestionAnswerPair, listQuestionAnswerPairs } from '$lib/domain/models/questionAnswerPair';
-import { getTeacher } from '$lib/domain/models/user';
+import {findQuestionAnswerPair, createQuestionAnswerPair,  updateQuestionAnswerPair, listQuestionAnswerPairs } from '$lib/server/models/questionAnswerPair';
+import { getTeacher } from '$lib/server/models/user';
 import { handleTeacherRoute } from '$lib/server/utils';
 
 /** @type {import('./$types').Actions} */

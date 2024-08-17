@@ -1,5 +1,6 @@
 import { v4 } from 'uuid';
 import { Sequelize, DataTypes } from 'sequelize';
+import { TEACHER_EMAIL } from '$env/static/private';
 
 export const sequelize = new Sequelize({
     dialect: 'sqlite',
@@ -46,9 +47,9 @@ MetricDbModel.belongsTo(QuestionAnswerPairDbModel, { targetKey: 'id', foreignKey
 await sequelize.sync();
 
 // put teacher in DB
-const found = await UserDbModel.findOne({ where: { email: import.meta.env.VITE_TEACHER_EMAIL } });
+const found = await UserDbModel.findOne({ where: { email: TEACHER_EMAIL } });
 if (!found) {
-    await UserDbModel.create({ id: v4(), email: import.meta.env.VITE_TEACHER_EMAIL });
+    await UserDbModel.create({ id: v4(), email: TEACHER_EMAIL });
 }
 
 export { UserDbModel, QuestionAnswerPairDbModel, MetricDbModel, AnswerDbModel };
