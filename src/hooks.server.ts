@@ -10,6 +10,10 @@ const scope = [
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
+    if (event.url.pathname == '/') {
+        return redirect(302, '/view_questions');
+    }
+
     if (event.url.pathname.startsWith('/loggedout')) {
         const response = await resolve(event);
         return response;
@@ -18,7 +22,8 @@ export async function handle({ event, resolve }) {
     if (event.url.pathname.startsWith('/oathcallback')) {
         const code = event.url.searchParams.get('code');
         const {tokens} = await oauth2Client.getToken(code)
-   
+        // TODO how to make google pass along original url so I can redirect back to it?
+
         const refreshSeconds = COOKIE_REFRESH_SECONDS;
         return new Response('', {
             headers: new Headers({
