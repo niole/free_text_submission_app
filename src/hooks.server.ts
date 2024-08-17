@@ -21,13 +21,13 @@ export async function handle({ event, resolve }) {
 
     if (event.url.pathname.startsWith('/oathcallback')) {
         const code = event.url.searchParams.get('code');
+        const state = event.url.searchParams.get('state');
         const {tokens} = await oauth2Client.getToken(code)
-        // TODO how to make google pass along original url so I can redirect back to it?
 
         const refreshSeconds = COOKIE_REFRESH_SECONDS;
         return new Response('', {
             headers: new Headers({
-                Location: '/',
+                Location: state ?? '/',
                 'Set-Cookie': `user=${tokens.id_token}; Max-Age=${refreshSeconds}`
             }),
             status: 302,
@@ -41,8 +41,10 @@ export async function handle({ event, resolve }) {
 
         const url = oauth2Client.generateAuthUrl({
             access_type: 'offline',
-            scope
+            scope,
+            state: event.url.pathname,
         });
+
         if (error instanceof UnauthenticatedError) {
             // initiate login flow
             return redirect(302, url);
