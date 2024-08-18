@@ -11,6 +11,7 @@ docker run \
     -e PORT=5173 \
     -e ORIGIN=http://localhost:5173 \
     -p 5173 \
+    -v /data:/data \
     --network host \
     teacher_app:1
 ```
