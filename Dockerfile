@@ -2,8 +2,8 @@ FROM node:21.7.3-alpine3.20
 
 WORKDIR /
 
-ENV PORT=5173
-ENV ORIGIN=http://localhost:5173
+ENV PORT=80
+ENV ORIGIN=http://localhost:80
 ENV APP_DB_PATH=/data/
 
 COPY build build
@@ -14,6 +14,6 @@ RUN npm ci --omit dev
 
 RUN mv package.json build/
 
-EXPOSE 5173
+EXPOSE 80
 
 ENTRYPOINT ["node", "build"]
