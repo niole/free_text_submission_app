@@ -2,7 +2,12 @@
 	import '../../app.css';
 	import { Navbar, NavLi, NavUl } from 'flowbite-svelte';
 
-	const appDomain = import.meta.env.VITE_APP_DOMAIN;
+	let appDomain = '';
+	try {
+		appDomain = process.env.APP_DOMAIN;
+    } catch {
+		appDomain = window.location.origin;
+    }
 </script>
 
 <div class="app">

@@ -1,6 +1,7 @@
 import {redirect, error as errorResponse} from '@sveltejs/kit';
 import { getVerifiedUser, oauth2Client, UnauthenticatedError, UnauthorizedError } from '$lib/server/utils';
-import { COOKIE_REFRESH_SECONDS } from '$env/static/private';
+
+const { COOKIE_REFRESH_SECONDS }  = process.env;
 
 const scope = [
   'https://www.googleapis.com/auth/userinfo.email',

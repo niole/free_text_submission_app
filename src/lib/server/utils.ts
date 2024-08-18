@@ -1,17 +1,19 @@
 import {google} from 'googleapis';
 import cookie from 'cookie';
 import { jwtDecode } from "jwt-decode";
-import {
+
+const {
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
     ADMIN_EMAIL,
     TEACHER_EMAIL,
-} from '$env/static/private';
+    APP_DOMAIN,
+} = process.env;
 
 export const oauth2Client = new google.auth.OAuth2(
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
-    `${import.meta.env.VITE_APP_DOMAIN}/oathcallback`,
+    `${APP_DOMAIN}/oathcallback`,
 );
 
 export class UnauthorizedError extends Error {}

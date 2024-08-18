@@ -1,7 +1,8 @@
 import * as sequelize from 'sequelize';
 import * as db from './db';
 import { type UserModel } from '$lib/types';
-import { TEACHER_EMAIL } from '$env/static/private';
+
+const { TEACHER_EMAIL } = process.env;
 
 export async function listStudents(limit: number, query?: string): Promise<UserModel[]> {
     const dbQuery = {
@@ -24,7 +25,7 @@ export async function listStudents(limit: number, query?: string): Promise<UserM
 
 
     const metrics = await db.MetricDbModel.findAll(dbQuery);
-   
+
     return metrics.map(x => ({ email: x.toJSON().email }));
 }
 

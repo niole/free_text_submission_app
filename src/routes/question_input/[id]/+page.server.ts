@@ -6,9 +6,8 @@ import { type QuestionAnswerPairModel } from '$lib/types';
 import { createAnswerQuestionMetric, createMetric, createViewQuestionMetric } from '$lib/server/models/metric';
 import { createAnswer } from '$lib/server/models/answer';
 import { getViewingUserEmail } from '$lib/server/utils';
-import { OPENAI_KEY } from '$env/static/private';
 
-const openai = new OpenAI({ apiKey: OPENAI_KEY });
+const openai = new OpenAI({ apiKey: process.env.OPENAI_KEY });
 
 const DEFAULT_CHAT_PROMPT = `
 you are a math problem grader. Given a problem and an answer, please grade the answer that the student subsequently sends to you.
