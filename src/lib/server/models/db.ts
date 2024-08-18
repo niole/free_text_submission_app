@@ -1,12 +1,13 @@
 import { v4 } from 'uuid';
 import { Sequelize, DataTypes } from 'sequelize';
+import { TEACHER_EMAIL } from '$env/static/private';
 
-const { ENABLE_DB_LOGS, TEACHER_EMAIL } = process.env;
+const { ENABLE_DB_LOGS } = process.env;
 
 export const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: `${process.env.APP_DB_PATH ?? ""}db.sqlite`,
-    logging: ENABLE_DB_LOGS,
+    logging: ENABLE_DB_LOGS ? console.log : undefined,
 });
 
 const UserDbModel = sequelize.define('User', {

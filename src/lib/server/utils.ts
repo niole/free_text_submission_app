@@ -1,12 +1,11 @@
 import {google} from 'googleapis';
 import cookie from 'cookie';
 import { jwtDecode } from "jwt-decode";
+import { ADMIN_EMAIL, TEACHER_EMAIL } from '$env/static/private';
 
 const {
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
-    ADMIN_EMAIL,
-    TEACHER_EMAIL,
     APP_DOMAIN,
 } = process.env;
 
