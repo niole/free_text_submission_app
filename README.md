@@ -1,21 +1,24 @@
 # Env Vars
 ```sh
 # .env
-OPENAI_KEY=...
-VITE_APP_DOMAIN=...
-VITE_TEACHER_EMAIL=...
+```
+
+# build run prod
+```sh
+./build_prod.sh 1
+docker run \
+    -e PORT=5173 \
+    -e ORIGIN=http://localhost:5173 \
+    -p 5173 \
+    --network host \
+    teacher_app:1
 ```
 
 # TODO
 
-- create paginated table and typeahead
-- verify that secrets stay on BE
-- search by email and question in metrics page
 - export metrics summary to csv
-- pagination for metrics
 - stop logging everything all the time
 - test questions where the answers have math notation in them
-- edit question doesn't work
 
 # create-svelte
 
