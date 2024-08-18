@@ -14,4 +14,6 @@ RUN npm ci --omit dev
 
 RUN mv package.json build/
 
+EXPOSE 5173
+
 ENTRYPOINT ["node", "build"]
