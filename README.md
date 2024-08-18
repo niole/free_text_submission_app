@@ -7,6 +7,7 @@
 ```sh
 ./build_prod.sh 1
 docker run \
+    -e APP_DB_PATH="/data/" \
     -e PORT=5173 \
     -e ORIGIN=http://localhost:5173 \
     -p 5173 \

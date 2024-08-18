@@ -4,6 +4,7 @@ WORKDIR /
 
 ENV PORT=5173
 ENV ORIGIN=http://localhost:5173
+ENV APP_DB_PATH=/data/
 
 COPY build build
 COPY package.json .

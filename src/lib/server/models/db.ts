@@ -1,10 +1,10 @@
 import { v4 } from 'uuid';
 import { Sequelize, DataTypes } from 'sequelize';
-import { APP_DB_PATH, TEACHER_EMAIL } from '$env/static/private';
+import { TEACHER_EMAIL } from '$env/static/private';
 
 export const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: `${APP_DB_PATH}/db.sqlite`,
+    storage: `${process.env.APP_DB_PATH ?? ""}db.sqlite`,
 });
 
 const UserDbModel = sequelize.define('User', {
