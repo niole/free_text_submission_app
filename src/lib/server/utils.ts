@@ -9,8 +9,6 @@ const {
     APP_DOMAIN,
 } = process.env;
 
-console.log(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, APP_DOMAIN);
-
 export const oauth2Client = new google.auth.OAuth2(
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
