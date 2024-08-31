@@ -1,7 +1,7 @@
 <script>
-	import { env } from '$env/dynamic/public';
+	import { PUBLIC_VERSION } from '$env/static/public';
 </script>
 
 <div>
-	{env.PUBLIC_VERSION}
+	{PUBLIC_VERSION}
 </div>

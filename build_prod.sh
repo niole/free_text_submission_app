@@ -1,6 +1,6 @@
 #!/bin/bash
 
-hash=$(git rev-parse --short HEAD)
+hash=$(./version.sh)
 ARG1=$1
 TAG=${ARG1:=$hash}
 
