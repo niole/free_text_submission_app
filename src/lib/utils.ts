@@ -3,7 +3,8 @@ export function buildLink(path: string) {
 }
 
 export function copyUrlToClipBoard(link: string) {
-    if (window.isSecureContext) {
+    const isSecure = window.location.protocol.startsWith('https');
+    if (isSecure) {
         navigator.clipboard.writeText(link);
     } else {
         alert(link);
