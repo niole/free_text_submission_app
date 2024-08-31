@@ -3,7 +3,11 @@ export function buildLink(path: string) {
 }
 
 export function copyUrlToClipBoard(link: string) {
-    navigator.clipboard.writeText(link);
+    if (window.isSecureContext) {
+        navigator.clipboard.writeText(link);
+    } else {
+        alert(link);
+    }
 }
 
 export function getHumanReadableDate(date: string) {
