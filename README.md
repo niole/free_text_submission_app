@@ -18,7 +18,6 @@ docker run \
 
 # TODO
 
-- in the copy url workaround, make the modal not make people think it copies when you click "ok", also remind that they must manually copy
 - make buttons colored
 - add secret code to give students when they answer question
 - add summary metrics view: search by class then question and then can drilldown per student
