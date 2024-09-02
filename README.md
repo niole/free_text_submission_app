@@ -24,7 +24,6 @@ docker run \
 
 # TODO
 
-- add secret code to give students when they answer question
 - add summary metrics view: search by class then question and then can drilldown per student
 - add concept of classes
 - test questions where the answers have math notation in them
