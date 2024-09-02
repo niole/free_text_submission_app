@@ -13,7 +13,7 @@ export const actions = {
         const answer = body.get('answer')?.toString();
         const pairId = body.get('pairId')?.toString();
         const title = body.get('title')?.toString();
-        const successTeacherResponse = body.get('successTeacherResponse')?.toString();
+        const successTeacherResponse = body.get('successTeacherResponse') || null;
 
         if (!title || !question || !answer) {
             return error(400, 'Please include title, question, and answer');

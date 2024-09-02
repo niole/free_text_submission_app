@@ -83,7 +83,7 @@
             <Label for="successTeacherResponse">Success Teacher Response (optional)</Label>
             <span class="text-xs">Appears to the student after they answer the question correctly</span>
             <Textarea
-                on:keyup={e => successTeacherResponse = e.target.value}
+                on:keyup={e => successTeacherResponse = e.target.value || null}
                 type="text"
                 id="successTeacherResponse"
                 name="successTeacherResponse"
