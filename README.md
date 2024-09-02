@@ -18,7 +18,6 @@ docker run \
 
 # TODO
 
-- make buttons colored
 - add secret code to give students when they answer question
 - add summary metrics view: search by class then question and then can drilldown per student
 - add concept of classes
