@@ -7,6 +7,7 @@ ENV ORIGIN=http://localhost:80
 ENV APP_DB_PATH=/data/
 
 COPY build build
+COPY migrations migrations
 COPY package.json .
 COPY package-lock.json .
 
