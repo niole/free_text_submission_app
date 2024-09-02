@@ -9,7 +9,8 @@
     export let label: string = 'link';
 
     function handleOpen() {
-        const success = copyUrlToClipBoard(copyText);
+        const text = copyText ? copyText : buildCopyText();
+        const success = copyUrlToClipBoard(text);
         if (!success) {
             clickOutsideModal = true;
         }
@@ -18,7 +19,7 @@
 
 <Button on:click={handleOpen}
     icon="FileCopyAltOutline"
-    color="light"
+    color="blue"
 >
 <FileCopyAltOutline/>{label}
 </Button>

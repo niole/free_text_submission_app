@@ -60,7 +60,7 @@ showing {data.qs.data.length} of {data.qs.pagination.totalItems} questions
 					/>
 				</TableBodyCell>
 				<TableBodyCell>
-					<Button color="light" href={`/create?pairId=${q.id}`}>edit</Button>
+					<Button color="blue" href={`/create?pairId=${q.id}`}>edit</Button>
 				</TableBodyCell>
 				<TableBodyCell>
 					<Button

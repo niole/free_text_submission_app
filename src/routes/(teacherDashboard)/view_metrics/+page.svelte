@@ -1,6 +1,7 @@
 <script lang="ts">
     import { writable } from 'svelte/store';
     import { onMount } from 'svelte';
+    import CopyTextModal from '$lib/components/CopyTextModal.svelte';
     import { Button, Input, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
     import { buildLink, doFetch, debounce, getHumanReadableDate, copyUrlToClipBoard } from '$lib/utils';
     import { type PaginatedResponse, type QuestionAnswerPairModel, type UserQuestionMetric } from '$lib/types';
@@ -120,13 +121,9 @@
                 />
         </span>
 
-        <Button
-            icon="FileCopyAltOutline"
-            color="light"
-            on:click={() => copyUrlToClipBoard(buildLink(`${window.location.pathname}?email=${email}&id=${id}`))}
-        >
-            <FileCopyAltOutline/>link
-        </Button>
+        <CopyTextModal
+            buildCopyText={() => buildLink(`${window.location.pathname}?email=${email}&id=${id}`)}
+        />
     </div>
 
     {#if $display_email}

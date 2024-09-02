@@ -15,7 +15,7 @@
     let answer: string | undefined = data.pair?.answer;
     let pairId: string | undefined;
     let title: string | undefined = data.pair?.title;
-    
+
     onMount(() => {
         pairId = new URLSearchParams(window.location.search).get('pairId') || '';
     });
@@ -78,7 +78,7 @@
 
         <Button
             type="submit"
-            color="light"
+            color="blue"
             disabled={!$display_q || !$display_a}
             formaction="?/saveQuestionAnswerPair">
             {$display_pair_id ? 'Update' : 'Submit'}
