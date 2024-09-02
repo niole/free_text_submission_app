@@ -2,12 +2,16 @@ export function buildLink(path: string) {
     return `${window.location.origin}${path}`;
 }
 
+/**
+ * returns true if could copy to clip board
+ */
 export function copyUrlToClipBoard(link: string) {
-    const isSecure = window.location.protocol.startsWith('https');
-    if (isSecure) {
+    try {
         navigator.clipboard.writeText(link);
-    } else {
-        alert(link);
+        return true;
+    } catch (e) {
+        console.error('Failed to copy to clipboard: ', e);
+        return false;
     }
 }
 

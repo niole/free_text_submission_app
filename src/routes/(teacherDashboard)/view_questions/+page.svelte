@@ -1,6 +1,6 @@
 <script lang="ts">
+	import CopyTextModal from '$lib/components/CopyTextModal.svelte';
 	import { Input, Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
-	import { FileCopyAltOutline } from 'flowbite-svelte-icons';
 	import { doFetch, debounce, buildLink, copyUrlToClipBoard } from '$lib/utils';
 
 	/** @type {import('./$types').PageData} */
@@ -55,13 +55,9 @@ showing {data.qs.data.length} of {data.qs.pagination.totalItems} questions
 				<TableBodyCell tdClass="handle-overflow">{q.question}</TableBodyCell>
 				<TableBodyCell tdClass="handle-overflow">{q.answer}</TableBodyCell>
 				<TableBodyCell>
-					<Button
-						icon="FileCopyAltOutline"
-						color="light"
-						on:click={() => copyUrlToClipBoard(buildLink(`/question_input/${q.id}`))}
-					>
-					<FileCopyAltOutline/>link
-					</Button>
+					<CopyTextModal
+						buildCopyText={() => buildLink(`/question_input/${q.id}`)}
+					/>
 				</TableBodyCell>
 				<TableBodyCell>
 					<Button color="light" href={`/create?pairId=${q.id}`}>edit</Button>
