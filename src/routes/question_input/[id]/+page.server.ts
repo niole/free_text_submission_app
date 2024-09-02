@@ -90,7 +90,7 @@ export const actions = {
                 createMetric(createAnswerQuestionMetric(email, pair.id, userAnswer.id));
 
                 if (passed !== null && passed) {
-                    return { correct: true };
+                    return { correct: true, successTeacherResponse: pair.successTeacherResponse };
                 } else {
                     if (passed === null) {
                         console.error(`Chat assistant gave inscrutible answer: ${JSON.stringify(completion)}`);

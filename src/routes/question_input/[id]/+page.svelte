@@ -31,8 +31,9 @@
 			body: `id=${id}&answer=${answer}`,
 		}, true).then(r => {
 			const x = deserialize(r);
-			if (x.data.correct) {
-				alert('Correct');
+			const { correct, successTeacherResponse = 'Correct' } = x.data;
+			if (correct) {
+				alert(successTeacherResponse);
 			} else {
 				alert('Incorrect, try again');
 			}

@@ -1,0 +1,3 @@
+ALTER TABLE QuestionAnswerPairs
+    ADD successTeacherResponse VARCHAR(255) NULL;
+

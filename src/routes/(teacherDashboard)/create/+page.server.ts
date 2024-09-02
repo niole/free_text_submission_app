@@ -13,6 +13,7 @@ export const actions = {
         const answer = body.get('answer')?.toString();
         const pairId = body.get('pairId')?.toString();
         const title = body.get('title')?.toString();
+        const successTeacherResponse = body.get('successTeacherResponse')?.toString();
 
         if (!title || !question || !answer) {
             return error(400, 'Please include title, question, and answer');
@@ -27,7 +28,7 @@ export const actions = {
         if (question && answer) {
 
             if (pairId) {
-                await updateQuestionAnswerPair(pairId, { title, question, answer });
+                await updateQuestionAnswerPair(pairId, { title, question, answer, successTeacherResponse });
             } else {
                 const id = v4();
                 await createQuestionAnswerPair({
@@ -36,6 +37,7 @@ export const actions = {
                     ownerId: teacherId,
                     question,
                     answer,
+                    successTeacherResponse,
                 });
             }
         }

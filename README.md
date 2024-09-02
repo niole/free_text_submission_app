@@ -16,6 +16,12 @@ docker run \
     teacher_app:1
 ```
 
+# Run DB Migration
+
+```sh
+./migrations/scripts/execute_migration.sh migrations/scripts/addSuccessTeacherResponse.txt 
+```
+
 # TODO
 
 - add secret code to give students when they answer question

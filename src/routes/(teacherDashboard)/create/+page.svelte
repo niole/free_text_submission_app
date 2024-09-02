@@ -9,12 +9,13 @@
     import { onMount } from "svelte";
 
 	/** @type {import('./$types').PageData} */
-    export let data: { pair: { title: string, question: string, answer: string } | undefined };
+    export let data: { pair: { title: string, question: string, answer: string, successTeacherResponse?: string } | undefined };
 
     let question: string | undefined = data.pair?.question;
     let answer: string | undefined = data.pair?.answer;
     let pairId: string | undefined;
     let title: string | undefined = data.pair?.title;
+    let successTeacherResponse: string | undefined = data.pair?.successTeacherResponse;
 
     onMount(() => {
         pairId = new URLSearchParams(window.location.search).get('pairId') || '';
@@ -24,11 +25,13 @@
     const display_a = writable();
     const display_pair_id = writable();
     const display_title = writable();
+    const display_teacher_response = writable();
 
     $: display_title.set(title);
     $: display_pair_id.set(pairId);
     $: display_q.set(question);
     $: display_a.set(answer);
+    $: display_teacher_response.set(successTeacherResponse);
 </script>
 
 <div class="page-header">
@@ -59,7 +62,7 @@
                 type="text"
                 id="question"
                 name="question"
-                rows="5"
+                rows="3"
                 value={$display_q ?? ''}
             />
         </div>
@@ -71,15 +74,28 @@
                 type="text"
                 id="answer"
                 name="answer"
-                rows="5"
+                rows="3"
                 value={$display_a ?? ''}
+            />
+        </div>
+
+        <div>
+            <Label for="successTeacherResponse">Success Teacher Response (optional)</Label>
+            <span class="text-xs">Appears to the student after they answer the question correctly</span>
+            <Textarea
+                on:keyup={e => successTeacherResponse = e.target.value}
+                type="text"
+                id="successTeacherResponse"
+                name="successTeacherResponse"
+                rows="2"
+                value={$display_teacher_response ?? ''}
             />
         </div>
 
         <Button
             type="submit"
             color="blue"
-            disabled={!$display_q || !$display_a}
+            disabled={!$display_q || !$display_a || !$display_title}
             formaction="?/saveQuestionAnswerPair">
             {$display_pair_id ? 'Update' : 'Submit'}
         </Button>
@@ -94,6 +110,10 @@
     <Label for="answer">Answer</Label>
     <pre class="displayed_input">
         {$display_a ?? ''}
+    </pre>
+    <Label for="successTeacherResponse">Teacher Response</Label>
+    <pre class="displayed_input">
+        {$display_teacher_response ?? ''}
     </pre>
 </div>
 

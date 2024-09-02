@@ -22,6 +22,10 @@ const QuestionAnswerPairDbModel = sequelize.define('QuestionAnswerPair', {
     question: DataTypes.STRING,
     answer: DataTypes.STRING,
     link: { type: DataTypes.STRING, unique: true },
+    successTeacherResponse: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 });
 QuestionAnswerPairDbModel.belongsTo(UserDbModel, { targetKey: 'id', foreignKey: 'ownerId' });
 

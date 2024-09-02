@@ -27,6 +27,7 @@ export type QuestionAnswerPairModel = {
     ownerId: string,
     question: string,
     answer: string,
+    successTeacherResponse?: string,
 };
 
 export type UserModel = {
