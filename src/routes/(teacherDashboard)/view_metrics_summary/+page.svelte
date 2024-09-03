@@ -9,6 +9,10 @@
     /** @type {import('./$types').PageData} */
     export let data: PaginatedResponse<QuestionAnswerSummary>
 
+    let filterState: { email?: string, questionId?: string } = {};
+    const display_filter_state = writable();
+    $: display_filter_state.set(filterState)
+
     let summaries: PaginatedResponse<QuestionAnswerSummary> = data ?? defaultPaginatedResponse;
     const display_summaries = writable();
     $: display_summaries.set(data)
@@ -20,6 +24,11 @@
     let questions: PaginatedResponse<QuestionAnswerPairModel> = defaultPaginatedResponse;
     const display_questions = writable();
     $: display_questions.set(questions);
+
+    function updateFilterState(opt: Partial<FilterState>) {
+        filterState = {...filterState, ...opt};
+        updateSummaries({ page: 1, pageSize: 10, ...filterState });
+    }
 
     async function updateSummaries(opts: {
         page: number,
@@ -95,14 +104,14 @@
         label="Filter by question"
         isTypeahead={true}
         onSearch={updateQuestions}
-        onChange={x => updateSummaries({ page: 1, pageSize: 10, questionId: x })}
+        onChange={x => updateFilterState({ questionId: x || undefined })}
         items={[{ value: '', label: 'none'}, ...questions.data.map(x => ({ value: x.id, label: x.title })) ]}
     />
     <Dropdown
         label="Filter by student"
         isTypeahead={true}
         onSearch={updateStudents}
-        onChange={x => updateSummaries({ page: 1, pageSize: 10, email: x })}
+        onChange={x => updateFilterState({ email: x || undefined })}
         items={[{ value: '', label: 'none'}, ...students.map(x => ({ value: x, label: x })) ]}
     />
 </div>
