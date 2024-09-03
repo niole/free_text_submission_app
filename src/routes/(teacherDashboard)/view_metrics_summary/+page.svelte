@@ -1,11 +1,11 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
-    import { Pagination, PaginationItem, Button, Input, Table, TableBody, TableBodyCell,
-    TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
+    import {  Button, Input, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
     import { defaultPaginatedResponse, type QuestionAnswerPairModel, type UserModel, type PaginatedResponse, type QuestionAnswerSummary } from '$lib/types';
     import { doFetch } from '$lib/utils';
     import Dropdown from '$lib/components/Dropdown.svelte';
+    import Pagination from '$lib/components/Pagination.svelte';
 
     /** @type {import('./$types').PageData} */
     export let data: PaginatedResponse<QuestionAnswerSummary>
@@ -25,10 +25,6 @@
     let questions: PaginatedResponse<QuestionAnswerPairModel> = defaultPaginatedResponse;
     const display_questions = writable();
     $: display_questions.set(questions);
-
-    let totalPages: number = calculateTotalPages(summaries.pagination);
-    const display_total_pages = writable();
-    $: display_total_pages.set(totalPages);
 
     function updateFilterState(opt: Partial<FilterState>) {
         filterState = {...filterState, ...opt};
@@ -67,15 +63,10 @@
             const response = await doFetch('?/getSummary', { method: 'POST', body: data}, true);
             // TODO IDK why it wouldn't work when setting equal so summaries
             $: display_summaries.set(response.data);
-            $: display_total_pages.set(calculateTotalPages(response.data.pagination))
         } catch (e) {
             console.error('Failed to fetch summaries: ', e);
             // TODO toast?
         }
-    }
-
-    function calculateTotalPages(pagination: PaginationOpts): number {
-        return Math.ceil(pagination.totalItems/pagination.page.pageSize);
     }
 
     async function updateStudents(q: string = '') {
@@ -98,20 +89,9 @@
         }
     }
 
-    function getNextPage() {
-        const { page, pageSize } = summaries.pagination.page;
+    function getPageChange(opts) {
         updateSummaries({
-            page: page + 1,
-            pageSize,
-            ...filterState,
-        })
-    }
-
-    function getPrevPage() {
-        const { page, pageSize } = summaries.pagination.page;
-        updateSummaries({
-            page: Math.max(1, page - 1),
-            pageSize,
+            ...opts,
             ...filterState,
         })
     }
@@ -144,11 +124,13 @@
 </div>
 
 <div>
-    <div class="flex mb-2">
-        <Pagination on:previous={getPrevPage} on:next={getNextPage} />
-        <span class="ml-5 p-1">
-            Showing {$display_summaries.pagination.page.page} of {$display_total_pages} pages
-        </span>
+    <div class="mb-2">
+        <Pagination
+            pageSize={$display_summaries.pagination.page.pageSize}
+            page={$display_summaries.pagination.page.page}
+            totalItems={$display_summaries.pagination.totalItems}
+            onPageChange={getPageChange}
+        />
     </div>
     <Table>
         <TableHead>
