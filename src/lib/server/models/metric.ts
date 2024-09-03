@@ -1,6 +1,6 @@
 import * as sequelize from 'sequelize';
 import { MetricDbModel, QuestionAnswerPairDbModel, AnswerDbModel, UserDbModel } from './db';
-import { type QuestionAnswerAnalysis, type UserQuestionMetric } from '$lib/types';
+import { type PaginatedResponse, type QuestionAnswerSummary, type QuestionAnswerAnalysis, type UserQuestionMetric } from '$lib/types';
 
 export type Metric = {
     /** the time the metric was created */
@@ -94,6 +94,57 @@ export async function getMetricsByEmail(
             correct: m.Answer?.correct,
         };
     })
+}
+
+export async function getSummary(
+    page: number,
+    pageSize: number,
+    email?: string,
+    questionTitle?: string,
+    questionId?: string,
+): Promise<PaginatedResponse<QuestionAnswerSummary>> {
+    const where: { email?: string, QuestionAnswerPair?: any } = {};
+
+    if (email) {
+        where.email = email;
+    }
+
+    if (questionId) {
+        where["$QuestionAnswerPair.id$"] = questionId;
+    }
+
+    if (questionTitle) {
+        where["$QuestionAnswerPair.title$"] = {
+            [sequelize.Op.like]: `%${questionTitle}%`,
+        };
+    }
+
+    const offset = (page-1)*pageSize;
+    const limit = pageSize;
+
+    const { count, rows } = await AnswerDbModel.findAndCountAll({
+        where,
+        group: ['QuestionAnswerPair.title'],
+        include: [QuestionAnswerPairDbModel],
+        offset,
+        limit,
+    })
+
+    return {
+        data: rows.map(x => {
+            const j = x.toJSON()
+            return {
+                email: j.email,
+                correct: j.correct,
+                title: j.QuestionAnswerPair.title,
+                questionId: j.QuestionAnswerPair.id,
+            };
+        }),
+        pagination: {
+            totalItems: count.length,
+            page: { page, pageSize }
+        }
+    };
 }
 
 export async function getAnalysis(

@@ -15,7 +15,7 @@
 		<NavUl>
 			<NavLi><a href="/view_questions">Questions</a></NavLi>
 			<NavLi><a href="/create">Create</a></NavLi>
-			<NavLi><a href="/view_metrics">Metrics</a></NavLi>
+			<NavLi><a href="/view_metrics_summary">Metrics</a></NavLi>
 			<NavLi><a href={`${appDomain}/api/logout`}>Logout</a></NavLi>
 		</NavUl>
 	</Navbar>

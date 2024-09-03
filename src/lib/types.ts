@@ -1,5 +1,12 @@
 import type { integrations_v1alpha } from "googleapis";
 
+export type QuestionAnswerSummary = {
+    email: string,
+    title: string,
+    questionId: string,
+    correct?: boolean,
+};
+
 export type UserQuestionMetric = {
     name: string,
     createdAt: Date,
@@ -54,3 +61,11 @@ export type PaginatedResponse<D> = {
     pagination: PaginationOpts,
     data: D[],
 }
+
+export const defaultPaginatedResponse = {
+    data: [],
+    pagination: {
+        totalItems: 0,
+        page: { page: 1, pageSize: 10},
+    },
+};

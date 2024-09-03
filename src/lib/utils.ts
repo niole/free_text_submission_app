@@ -1,3 +1,5 @@
+import { deserialize } from '$app/forms';
+
 export function buildLink(path: string) {
     return `${window.location.origin}${path}`;
 }
@@ -33,7 +35,7 @@ export async function doFetch(url: string, opts: any = undefined, isFormAction: 
     .then(x => {
         if (x.ok) {
             if (isFormAction) {
-                return x.text();
+                return x.text().then(x => deserialize(x));
             }
             return x.json();
         } else {

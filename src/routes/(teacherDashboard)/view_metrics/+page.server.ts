@@ -1,8 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { getMetricsByEmail } from '$lib/server/models/metric';
-import { listQuestionAnswerPairs, findQuestionAnswerPair } from '$lib/server/models/questionAnswerPair';
+import { findQuestionAnswerPair } from '$lib/server/models/questionAnswerPair';
 import { handleTeacherRoute } from '$lib/server/utils';
-import { listStudents } from '$lib/server/models/user';
 
 export async function load(event) {
     await handleTeacherRoute(event)
@@ -21,12 +20,8 @@ export async function load(event) {
 
     try {
         const metrics = email && id ? await getMetricsByEmail(email, id) : undefined;
-        const students = (await listStudents(10)).map(s => s.email);
-        const questions = await listQuestionAnswerPairs();
         return {
             questionTitle: pair?.title,
-            students,
-            questions,
             question: pair?.question,
             email,
             id,
