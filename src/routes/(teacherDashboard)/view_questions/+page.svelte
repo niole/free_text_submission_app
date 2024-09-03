@@ -2,6 +2,7 @@
 	import CopyTextModal from '$lib/components/CopyTextModal.svelte';
 	import { Input, Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
 	import { doFetch, debounce, buildLink, copyUrlToClipBoard } from '$lib/utils';
+	import Pagination from '$lib/components/Pagination.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -13,6 +14,14 @@
 		})
 		.catch(e => console.error(e));
 	});
+
+	function updatePage(opts) {
+		doFetch(`/api/question?page=${opts.page}&pageSize=${opts.pageSize}`)
+		.then(x => {
+			data = { qs: x };
+		})
+		.catch(e => console.error(e));
+    }
 </script>
 
 <svelte:head>
@@ -33,7 +42,12 @@
 </div>
 {/if}
 <Input class="mb-5 w-200px" placeholder="search" on:keyup={e => debouncedSearch(e.target.value)} />
-showing {data.qs.data.length} of {data.qs.pagination.totalItems} questions
+<Pagination
+    pageSize={data.qs.pagination.page.pageSize}
+    page={data.qs.pagination.page.page}
+    totalItems={data.qs.pagination.totalItems}
+    onPageChange={updatePage}
+/>
 <Table>
 	<TableHead>
 		<TableHeadCell>title</TableHeadCell>
