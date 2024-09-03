@@ -2,7 +2,6 @@
     import { onMount } from "svelte";
     import { Button, Textarea } from 'flowbite-svelte';
 	import { doFetch } from "$lib/utils";
-	import { deserialize } from '$app/forms';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -30,8 +29,7 @@
 			},
 			body: `id=${id}&answer=${answer}`,
 		}, true).then(r => {
-			const x = deserialize(r);
-			const { correct, successTeacherResponse } = x.data;
+			const { correct, successTeacherResponse } = r.data;
 			if (correct) {
 				alert(successTeacherResponse ?? 'Correct');
 			} else {
