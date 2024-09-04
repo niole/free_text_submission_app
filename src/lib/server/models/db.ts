@@ -27,7 +27,11 @@ const QuestionAnswerPairDbModel = sequelize.define('QuestionAnswerPair', {
         allowNull: true,
     },
 });
-QuestionAnswerPairDbModel.belongsTo(UserDbModel, { targetKey: 'id', foreignKey: 'ownerId' });
+QuestionAnswerPairDbModel.belongsTo(UserDbModel, {
+    onDelete: 'CASCADE',
+    targetKey: 'id',
+    foreignKey: 'ownerId'
+});
 
 const AnswerDbModel = sequelize.define('Answer', {
     createdAt: DataTypes.DATE,
@@ -37,7 +41,11 @@ const AnswerDbModel = sequelize.define('Answer', {
     answer: DataTypes.STRING,
     correct: DataTypes.BOOLEAN,
 });
-AnswerDbModel.belongsTo(QuestionAnswerPairDbModel, { targetKey: 'id', foreignKey: 'pairId' });
+AnswerDbModel.belongsTo(QuestionAnswerPairDbModel, {
+    onDelete: 'CASCADE',
+    targetKey: 'id',
+    foreignKey: 'pairId',
+});
 
 const MetricDbModel = sequelize.define('Metric', {
     createdAt: DataTypes.DATE,
@@ -49,7 +57,11 @@ const MetricDbModel = sequelize.define('Metric', {
 });
 MetricDbModel.belongsTo(UserDbModel, { targetKey: 'id', foreignKey: { allowNull: true, name: 'userId' } });
 MetricDbModel.belongsTo(AnswerDbModel, { targetKey: 'id', foreignKey: { allowNull: true, name: 'answerId' } });
-MetricDbModel.belongsTo(QuestionAnswerPairDbModel, { targetKey: 'id', foreignKey: { allowNull: true, name: 'pairId' } });
+MetricDbModel.belongsTo(QuestionAnswerPairDbModel, {
+    onDelete: 'CASCADE',
+    targetKey: 'id',
+    foreignKey: { allowNull: true, name: 'pairId' }
+});
 
 await sequelize.sync();
 
