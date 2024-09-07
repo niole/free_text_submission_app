@@ -64,6 +64,7 @@
     onDestroy(unsubscribeItems);
 </script>
 
+<span class="flex flex-col">
     {#if label}
         <Label>
             {$displayLabel}
@@ -83,6 +84,7 @@
             <ChevronDownOutline class="w-6 h-6 ms-2 text-white dark:text-white" />
         </Button>
     {/if}
+</span>
 <Dropdown>
     {#each $displayItems as x}
         <DropdownItem on:click={() => localOnChange(x.value)}>
