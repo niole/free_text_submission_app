@@ -5,7 +5,7 @@
 
 # build run prod
 ```sh
-./build_prod.sh 1
+./build_push_prod.sh 1
 docker run \
     -e APP_DB_PATH="/data/db.sqlite" \
     -e PORT=5173 \
