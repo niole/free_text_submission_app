@@ -124,11 +124,11 @@ export async function getSummary(
 
     const { count, rows } = await AnswerDbModel.findAndCountAll({
         where,
-        group: ['QuestionAnswerPair.title'],
+        group: ['QuestionAnswerPair.title', 'email'],
         include: [QuestionAnswerPairDbModel],
         offset,
         limit,
-    })
+    });
 
     return {
         data: rows.map(x => {
