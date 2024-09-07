@@ -103,7 +103,7 @@ export async function getSummary(
     questionTitle?: string,
     questionId?: string,
 ): Promise<PaginatedResponse<QuestionAnswerSummary>> {
-    const where: { email?: string, QuestionAnswerPair?: any } = {};
+    const where: { email?: string } = {};
 
     if (email) {
         where.email = email;

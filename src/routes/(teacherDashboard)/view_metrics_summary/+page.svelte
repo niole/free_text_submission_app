@@ -151,7 +151,7 @@
                     <TableBodyCell>{m.title}</TableBodyCell>
                     <TableBodyCell>{m.correct ?? 'n/a'}</TableBodyCell>
                     <TableBodyCell>
-                        <Button target="_none" color="blue" href={`/view_metrics?email=${m.email}&id=${m.questionId}`}>
+                        <Button color="blue" href={`/view_metrics?email=${m.email}&id=${m.questionId}`}>
                             Details
                         </Button>
                     </TableBodyCell>

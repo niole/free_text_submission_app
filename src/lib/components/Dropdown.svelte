@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onDestroy } from 'svelte';
-    import { Button, Dropdown, DropdownItem } from 'flowbite-svelte';
+    import { Label, Button, Dropdown, DropdownItem } from 'flowbite-svelte';
     import { ChevronDownOutline } from 'flowbite-svelte-icons';
     import { writable } from 'svelte/store';
     import { debounce } from '$lib/utils';
@@ -9,26 +9,29 @@
     export let onChange: (value: string) => void;
     export let value: string | undefined = undefined;
     export let label: string | undefined = undefined;
+    export let placeholder: string | undefined = undefined;
     export let isTypeahead: boolean = false;
     export let onSearch: ((value: string) => void) | undefined;
 
     const displayItems = writable();
     const displaySelected = writable();
+    const displayValue = writable();
     const displayLabel = writable();
 
-    $: displayItems.set(items);
     $: displayLabel.set(label);
+    $: displayItems.set(items);
+    $: displayValue.set('');
 
-    if (label) {
-        $: displayLabel.set(label);
+    if (value) {
+        $: displayValue.set(value);
     } else {
         const v = getSelectedLabel(items, value);
-        $: displaySelected.set(v);
+        $: displayValue.set(v);
     }
 
     const unsubscribeItems = displayItems.subscribe(newItems => {
-        if (!label && newItems) {
-            displaySelected.set(getSelectedLabel(newItems, value));
+        if (!value && newItems) {
+            displayValue.set(getSelectedLabel(newItems, value));
         }
     });
 
@@ -49,29 +52,34 @@
         }
     });
 
-    function localOnChange(value: string) {
-        if (!label) {
-            displaySelected.set(getSelectedLabel(items, value));
+    function localOnChange(newValue: string) {
+        if (!value) {
+            displayValue.set(getSelectedLabel(items, newValue));
         }
         if (onChange) {
-            onChange(value);
+            onChange(newValue);
         }
     }
 
     onDestroy(unsubscribeItems);
 </script>
 
+    {#if label}
+        <Label>
+            {$displayLabel}
+        </Label>
+    {/if}
     {#if isTypeahead}
         <Button color="light" class="w-100">
             <input
-                placeholder={$displayLabel}
+                value={$displayValue}
                 on:keyup={event => localSearch(event.target.value)}
             />
             <ChevronDownOutline class="w-6 h-6 ms-2 dark:text-white" />
         </Button>
     {:else}
         <Button color="blue">
-            {$displayLabel}
+            {$displayValue}
             <ChevronDownOutline class="w-6 h-6 ms-2 text-white dark:text-white" />
         </Button>
     {/if}
