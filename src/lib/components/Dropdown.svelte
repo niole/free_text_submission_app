@@ -13,6 +13,8 @@
     export let isTypeahead: boolean = false;
     export let onSearch: ((value: string) => void) | undefined;
 
+    let dropdownOpen: boolean = false;
+
     const displayItems = writable();
     const displaySelected = writable();
     const displayValue = writable();
@@ -47,12 +49,14 @@
     }
 
     const localSearch = debounce((value: string) => {
+        dropdownOpen = true;
         if (onSearch) {
             onSearch(value);
         }
     });
 
     function localOnChange(newValue: string) {
+        dropdownOpen = false;
         if (!value) {
             displayValue.set(getSelectedLabel(items, newValue));
         }
@@ -85,7 +89,7 @@
         </Button>
     {/if}
 </span>
-<Dropdown>
+<Dropdown bind:open={dropdownOpen}>
     {#each $displayItems as x}
         <DropdownItem on:click={() => localOnChange(x.value)}>
             {x.label}
