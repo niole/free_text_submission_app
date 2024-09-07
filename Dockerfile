@@ -4,7 +4,7 @@ WORKDIR /
 
 ENV PORT=80
 ENV ORIGIN=http://localhost:80
-ENV APP_DB_PATH=/data/
+ENV APP_DB_PATH=/data/db.sqlite
 
 COPY build build
 COPY migrations migrations

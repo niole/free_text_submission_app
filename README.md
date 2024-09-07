@@ -7,7 +7,7 @@
 ```sh
 ./build_prod.sh 1
 docker run \
-    -e APP_DB_PATH="/data/" \
+    -e APP_DB_PATH="/data/db.sqlite" \
     -e PORT=5173 \
     -e ORIGIN=http://localhost:5173 \
     -p 5173 \
@@ -19,7 +19,10 @@ docker run \
 # Run DB Migration
 
 ```sh
+# first
 ./migrations/scripts/execute_migration.sh migrations/scripts/addSuccessTeacherResponse.txt 
+
+# or run the migrations from https://github.com/niole/questions_answers_migrations/releases
 ```
 
 # TODO
